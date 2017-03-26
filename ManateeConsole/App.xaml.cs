@@ -15,8 +15,7 @@ namespace ManateeConsole
     {
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
-            //MainWindow = new MainWindow();
-            MainWindow = new Window() { Content = new CaptureHistoryView() };
+            MainWindow = new MainWindow();
             MainWindow.Show();
         }
     }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -358,6 +359,14 @@ namespace ManateeConsole
             //maincore.hydro1.acquisitionStop();
             maincore.clock.Stop();
             maincore.sclock.Stop();
+            try
+            {
+                _frameSaveTask.Wait();
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+            }
         }
 
         Task _frameSaveTask = Task.CompletedTask;
@@ -392,6 +401,10 @@ namespace ManateeConsole
         }
         #endregion
 
+        private void Btn_CaptureHistory_OnClick(object sender, RoutedEventArgs e)
+        {
+            new Window() {Content = new CaptureHistoryView()}.ShowDialog();
+        }
     }
 
     public class ExtendedWindowsFormsHost : WindowsFormsHost

@@ -95,6 +95,7 @@
                 <Button x:Name="btn_HydrophoneSettings" Grid.Row="0" Content="Hydrophone Settings" Margin="0,0,0,2" Click="OnClickHydrophoneSettings" />
                 <Button x:Name="btn_IPCameraSettings" Grid.Row="1" Content="IP Camera Settings" Margin="0,0,0,2" Click="OnClickIPCameraSettings"/>
                 <Button x:Name="btn_PLCConnection" Grid.Row="2" Content="PLC Connection" Margin="0,0,0,2" Click="OnClickPLCConnection"/>
+                <Button x:Name="btn_CaptureHistory" Grid.Row="3" Content="Capture History" Margin="0,0,0,2" Click="Btn_CaptureHistory_OnClick"/>
             </Grid>
         </Grid>
     </Grid>

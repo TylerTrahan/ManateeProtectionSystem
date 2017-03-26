@@ -22,6 +22,7 @@ namespace ManateeConsole
         public static CaptureStorage Instance => LazyInstance.Value;
 
         private readonly CaptureStorageContext _db;
+        private readonly object _dbLock = new object();
 
         public string ImageFolder
         {
@@ -49,7 +50,10 @@ namespace ManateeConsole
 
             try
             {
-                _db.SaveChanges();
+                lock (_dbLock)
+                {
+                    _db.SaveChanges();
+                }
             }
             catch (Exception e)
             {
@@ -62,7 +66,12 @@ namespace ManateeConsole
         {
             var from = time.ToUniversalTime().AddMilliseconds(-msMargin);
             var to = time.ToUniversalTime().AddMilliseconds(msMargin);
-            var captures = _db.CaptureEntries.Where(x => x.Timestamp >= from && x.Timestamp < to).ToArray();
+            CaptureEntry[] captures;
+            lock (_dbLock)
+            {
+                captures = _db.CaptureEntries.Where(x => x.Timestamp >= @from && x.Timestamp < to).ToArray();
+                
+            }
             return captures.GroupBy(x => x.Source, (source, entries) => entries.FirstOrDefault()).ToArray();
         }
 
