@@ -3,22 +3,62 @@ using System.ComponentModel;
 
 namespace ManateeConsole
 {
+    using SciChart.Charting.Model.DataSeries;
+    using SciChart.Charting.ViewportManagers;
+    using SciChart.Data.Model;
     using System.ComponentModel;
+    using System.Timers;
 
     public class ViewModel : INotifyPropertyChanged
     {
+        private IDataSeries<double, double> voltageDataSeries;
+        
+        private IDataSeries<double, double> amplitudeDataSeries;
+
+        private double dt = 0.02;
+
+        private int FifoSize = 1000;
+
+        // Timer to process updates
+        private Timer _timerNewDataUpdate;
+
+        // The current time
+        private double t;
+
+        Random _random = new Random();
+
+        double RMSTally = 0;    //running total of squared values
+        int RMSSamples = 10;    //total number of samples to use for RMS calculation
+        int RMSCount = 0;       //current sample count for RMS calculation
+
+        #region ViewModel Constructor
+        public ViewModel()
+        {
+            _timerNewDataUpdate = new Timer(dt * 1000);
+            _timerNewDataUpdate.AutoReset = true;
+            _timerNewDataUpdate.Elapsed += OnNewData;
+
+            ViewportManager = new DefaultViewportManager();
+
+            // Create a DataSeriesSet
+            VoltageDataSeries = new XyDataSeries<double, double>();
+            AmplitudeDataSeries = new XyDataSeries<double, double>();
+
+            VoltageDataSeries.FifoCapacity = FifoSize;
+            AmplitudeDataSeries.FifoCapacity = FifoSize / RMSSamples;
+
+            MaxDb = new DoubleRange(0, 200);
+
+            _timerNewDataUpdate.Start();
+        }
+        #endregion
+
         #region OnPropertyChanged Members
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
-
-        #region ViewModel Constructor
-        public ViewModel()
-        {
         }
         #endregion
 
@@ -67,7 +107,7 @@ namespace ManateeConsole
         private string _serialPort_pt3 = "COM5";
         private string _partner_pt3 = null;
         private float _panHome_pt3 = 0;
-        private float _tiltHome_pt3 = 210; 
+        private float _tiltHome_pt3 = 210;
         //--Diagnostics Variables--//
         private float _rangeThres_s1 = 0; 
         private float _soundSpeed_s1 = 1500; 
@@ -85,9 +125,10 @@ namespace ManateeConsole
         private string _magImageFilePath = @"C:\Data\magImages\"; 
         private string _colorImageFilePath = @"C:\Data\colorImages\"; 
         private string _pngFilePath = @"C:\Data\Images\";
+        //--Hydrophone Variables--//
+        private double _hydroValue;
         #endregion
 
-        //Need to reformat many of these functions -TMFT
         #region ViewModel Property Changers
         public string ipaddr_s1
         {
@@ -701,6 +742,18 @@ namespace ManateeConsole
                 } 
             } 
         }
+        public double hydroValue
+        {
+            get { return _hydroValue; }
+            set
+            {
+                if (value != this._hydroValue)
+                {
+                    this._hydroValue = value;
+                    OnPropertyChanged("hydroValue");
+                }
+            }
+        }
         public int networkProtocol
          { 
             get { return _networkProtocol; } 
@@ -785,6 +838,103 @@ namespace ManateeConsole
                 } 
             } 
         }
-        #endregion     \\
+        #endregion
+
+        private void OnNewData(object sender, ElapsedEventArgs e)
+        {
+            //var data = _dataSource.GetVoltageSeries(1000);
+
+            // Append data to series.
+            //_dataSeries0.Append(data.XData, data.YData);
+
+            //double y1 = 3.0 * Math.Sin(((2 * Math.PI) * 1.4) * t) + _random.NextDouble() * 0.5;
+            double y1 = 0.0005 * Math.Sin(((2 * Math.PI) * 1.4) * t) + _random.NextDouble() * 0.00005;
+            //ATHydrophone ath = new ATHydrophone();
+
+            //for (int i = 0; i < VoltageValues.Count; i++)
+            //{
+            //    data.Samples[i].Value;
+
+            //    VoltageDataSeries.Append(t, VoltageValues[i]);
+
+            //    t += dt;
+            //}
+
+            VoltageDataSeries.Append(t, y1); // This plots the voltage graph you need to pass voltage values to y1
+
+            //Following calculates an RMS value over the value of RMSSamples of the acquired voltages.
+            if (RMSCount == RMSSamples - 1)
+            {
+                double RMSVoltage = Math.Sqrt(RMSTally/RMSSamples);
+
+                double referenceVoltage = Math.Pow(10, (sensitivity/20));
+
+                double db = 20 * Math.Log10(RMSVoltage / referenceVoltage);
+
+                AmplitudeDataSeries.Append(t, db);
+                RMSTally = 0.0;
+                RMSCount = 0;
+            }
+            else
+            {
+                RMSTally += y1 * y1;
+                RMSCount++;
+            }
+            
+            //var db = 20 * Math.Log10(y1) - 120;
+            //AmplitudeDataSeries.Append(t, db);
+           
+            // Increment current time
+            t += dt;
+        }
+
+        double sensitivity = -164.0;
+        ///<summary>
+        /// Sensitivity of the Hydrophone
+        /// ///</summary>
+        public string Sensitivity
+        {
+            get { return sensitivity.ToString(); }
+            set
+            {
+                Double.TryParse(value, out sensitivity);
+                OnPropertyChanged("Sensitivity");
+            }
+        }
+
+        DoubleRange _maxDb;
+        ///<summary>
+        /// The  limits of the amplitude plot
+        /// ///</summary>
+        public DoubleRange MaxDb
+        {
+            get { return _maxDb; }
+            set
+            {
+                _maxDb = value;
+                OnPropertyChanged("MaxDb");
+            }
+        }
+
+        public IDataSeries<double, double> VoltageDataSeries
+        {
+            get { return voltageDataSeries; }
+            set
+            {
+                voltageDataSeries = value;
+                OnPropertyChanged("VoltageDataSeries");
+            }
+        }
+        public IDataSeries<double, double> AmplitudeDataSeries
+        {
+            get { return amplitudeDataSeries; }
+            set
+            {
+                amplitudeDataSeries = value;
+                OnPropertyChanged("AmplitudeDataSeries");
+            }
+        }
+
+        public IViewportManager ViewportManager { get; set; }
     }
 }

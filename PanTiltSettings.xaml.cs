@@ -26,6 +26,7 @@ namespace ManateeConsole
         public ObservableCollection<string> portList = new ObservableCollection<string>();
         public bool port1Open = false;
         public bool port2Open = false;
+
         public PanTiltSettings()
         {
             InitializeComponent();
@@ -33,30 +34,6 @@ namespace ManateeConsole
 
         private void OnClickOK(object sender, RoutedEventArgs e)
         {
-           // ApplicationState.SetValue("serialPort1", comboBox1SerialPort1.Text);
-           // ApplicationState.SetValue("serialPort2", comboBox1SerialPort2.Text);
-           // //ApplicationState.SetValue("serialPort3", comboBox1SerialPort3.Text);
-           // //ApplicationState.SetValue("serialPort4", comboBox1SerialPort4.Text);
-           // ApplicationState.SetValue("partnerSonar1", comboBoxPartnerSonar1.Text);
-           // ApplicationState.SetValue("partnerSonar2", comboBoxPartnerSonar2.Text);
-           // //ApplicationState.SetValue("partnerSonar3", comboBoxPartnerSonar3.Text);
-           // //ApplicationState.SetValue("partnerSonar4", comboBoxPartnerSonar4.Text);
-           // ApplicationState.SetValue("autoConnect1", checkBoxAutoConnect1.IsChecked);
-           // ApplicationState.SetValue("autoConnect2", checkBoxAutoConnect2.IsChecked);
-           // //ApplicationState.SetValue("autoConnect3", checkBoxAutoConnect3.IsChecked);
-           // //ApplicationState.SetValue("autoConnect4", checkBoxAutoConnect4.IsChecked);
-           // ApplicationState.SetValue("panPosition1", textBoxPanPosition1.Text);
-           // ApplicationState.SetValue("panPosition2", textBoxPanPosition2.Text);
-           // //ApplicationState.SetValue("panPosition3", textBoxPanPosition3.Text);
-           // //ApplicationState.SetValue("panPosition4", textBoxPanPosition4.Text);
-           // ApplicationState.SetValue("tiltPosition1", textBoxTiltPosition1.Text);
-           // ApplicationState.SetValue("tiltPosition2", textBoxTiltPosition2.Text);
-           //// ApplicationState.SetValue("tiltPosition3", textBoxTiltPosition3.Text);
-           // //ApplicationState.SetValue("tiltPosition4", textBoxTiltPosition4.Text);
-           // ApplicationState.SetValue("offset1", checkBoxOffset1.IsChecked);
-           // ApplicationState.SetValue("offset2", checkBoxOffset2.IsChecked);
-           // //ApplicationState.SetValue("offset3", checkBoxOffset3.IsChecked);
-           // //ApplicationState.SetValue("offset4", checkBoxOffset4.IsChecked);
            this.Close();
         }
 
@@ -99,14 +76,14 @@ namespace ManateeConsole
 
         private void btn1Connect_Click(object sender, RoutedEventArgs e)
         {
-            maincore.pt1.cPort = "COM6";
+            maincore.pt1.cPort = this.comboBox1SerialPort1.Text;
             port1Open = maincore.pt1.cPortOpen();
             this.checkBoxAutoConnect1.IsChecked = port1Open;
         }
 
         private void btn2Connect_Click(object sender, RoutedEventArgs e)
         {
-            maincore.pt2.cPort = "COM7";
+            maincore.pt2.cPort = this.comboBox1SerialPort2.Text;
             port2Open = maincore.pt2.cPortOpen();
             this.checkBoxAutoConnect2.IsChecked = port1Open;
         }

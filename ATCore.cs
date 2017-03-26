@@ -36,6 +36,7 @@ namespace ManateeConsole
         //-----ATCORE FIELDS-----\\
         public ATSonar son1, son2;
         public ATCamera cam1, cam2;
+        public ATCamera ip1;
         public smPanTilt pt1, pt2, pt3;
         public ATHydrophone hydro1;
         public DispatcherTimer clock, sclock;
@@ -45,7 +46,7 @@ namespace ManateeConsole
         public ATCore()
         {
             viewmodel = MainWindow.viewmodel;
-            clock = new DispatcherTimer();
+            clock = new DispatcherTimer(DispatcherPriority.Render);
             clock.Interval = new TimeSpan(0, 0, 0, 0, 50);
 
             sclock = new DispatcherTimer();
@@ -62,22 +63,21 @@ namespace ManateeConsole
                 viewmodel.isConnected_s2 = true;
             }
 
-            //son2.connectHead(1);
+            //son2.connectHead(1);    //-USE THIS TO CONNECT TO THE 2250 HEAD
+            //son2.setRange(1, 15);
 
-            //son3 = new ATSonar(viewmodel.ipaddr_s3, 1, 100);
-            //if (son3.isConnected)
-            //{
-            //    viewmodel.isConnected_s3 = true;
-            //}
+            cam1 = new ATCamera(2, 0);
+            viewmodel.isConnected_c1 = true;   
+            viewmodel.ipaddr_c1 = "CAMERA 1";    
 
-            cam1 = new ATCamera();
-            cam2 = new ATCamera();
-            //cam3 = new ATCamera();
+            cam2 = new ATCamera(2, 0);
+            viewmodel.isConnected_c2 = true;   
+            viewmodel.ipaddr_c2 = "CAMERA 2";    
 
             pt1 = new smPanTilt();
             pt1.AutoScaleMode = AutoScaleMode.Inherit;
             pt1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            //Initialize McBay's class X 3
+            //Initialize McBay's class X 2
             pt1.cBaudRate = 9600;
             pt1.cDataBits = 8;
             pt1.cParity = 0;
@@ -88,13 +88,11 @@ namespace ManateeConsole
             pt2.cBaudRate = 9600;
             pt2.cDataBits = 8;
             pt2.cStopBits = 1;
-            //pt3 = new smPanTilt();
-            //pt3.cBaudRate = 9600;
-            //pt3.cDataBits = 8;
-            //pt3.cParity = 0;
-            //pt3.cStopBits = 1;
 
-            //hydro1 = new ATHydrophone();
+            hydro1 = new ATHydrophone();
+
+            //ip1 = new ATCamera(3);
+            
         }
 
         //-----ATCORE MEMBERS-----\\

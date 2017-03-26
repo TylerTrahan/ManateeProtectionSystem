@@ -25,10 +25,11 @@ namespace ManateeConsole
     public class ATCamera
     {
             //----ATCAMERA FIELDS----\\
-            private VideoCapture _capture = null;
+            public VideoCapture _capture = null;
             //private bool _captureInProgress;    -> I'm not using this yet -TMFT
             public Mat _frame; 
             public ImageBox imgBx;
+            public int captureType = 1;
 
             //----ATCAMERA CONSTRUCTOR----\\
             public ATCamera()
@@ -36,19 +37,120 @@ namespace ManateeConsole
                 imgBx = new ImageBox();
                 imgBx.FunctionalMode = ImageBox.FunctionalModeOption.Minimum;
                 
-                CvInvoke.UseOpenCL = false;
+                CvInvoke.UseOpenCL = true;
+
+                //Default capture type
                 try
                 {
                     _capture = new VideoCapture();
-                    //_capture.ImageGrabbed += ProcessFrame;
-                    //_capture.Start(); 
+
+                    //The following functions were used in testing
+                        //_capture.ImageGrabbed += ProcessFrame;
+                        //_capture.Start(); 
                 }
                 catch (NullReferenceException excpt)
                 {
                     System.Windows.Forms.MessageBox.Show(excpt.Message);
                 }
                 _frame = new Mat();
- 
+            }
+            
+            public ATCamera(int captureType)
+            {
+
+                imgBx = new ImageBox();
+                imgBx.FunctionalMode = ImageBox.FunctionalModeOption.Minimum;
+
+                CvInvoke.UseOpenCL = true;
+                if (captureType == 1)
+                {
+                    //Default capture type
+                    try
+                    {
+                        _capture = new VideoCapture();
+
+                    }
+                    catch (NullReferenceException excpt)
+                    {
+                        System.Windows.Forms.MessageBox.Show(excpt.Message);
+                    }
+                }
+                else if (captureType == 2)
+                {
+                    //Camera capture from card
+                    try
+                    {
+                        _capture = createLfgCapture(0);
+                    }
+                    catch (Exception excpt)
+                    {
+                        System.Windows.Forms.MessageBox.Show(excpt.Message);
+                    }
+                }
+                else if (captureType == 3)
+                {
+                    //IP Camera capture
+                    try
+                    {
+                        _capture = new VideoCapture(@"rtsp://admin:12345@192.168.1.64:554");
+                    }
+                    catch (NullReferenceException excpt)
+                    {
+                        System.Windows.Forms.MessageBox.Show(excpt.Message);
+                    }
+                }
+                _frame = new Mat();
+            }
+
+            public ATCamera(int captureType, int camNo)
+            {
+                imgBx = new ImageBox();
+                imgBx.FunctionalMode = ImageBox.FunctionalModeOption.Minimum;
+
+                CvInvoke.UseOpenCL = false;
+                if (captureType == 1)
+                {
+                    //Default capture type
+                    try
+                    {
+                        _capture = new VideoCapture();
+
+                    }
+                    catch (NullReferenceException excpt)
+                    {
+                        System.Windows.Forms.MessageBox.Show(excpt.Message);
+                    }
+                }
+                else if (captureType == 2)
+                {
+                    //Camera capture from card
+                    try
+                    {
+                        _capture = createLfgCapture(camNo);
+                    }
+                    catch (Exception excpt)
+                    {
+                        System.Windows.Forms.MessageBox.Show(excpt.Message);
+                    }
+                }
+                else if (captureType == 3)
+                {
+                    //IP Camera capture
+                    try
+                    {
+                        _capture = new VideoCapture(@"rtsp://admin:12345@192.168.1.64:554");
+                    }
+                    catch (NullReferenceException excpt)
+                    {
+                        System.Windows.Forms.MessageBox.Show(excpt.Message);
+                    }
+                }
+                _frame = new Mat();
+            }
+
+            private static Lfg.Capture createLfgCapture(int camNo)
+            {
+                return new Lfg.Capture(camNo);
             }
             
             //----ATCAMERA MEMBERS----\\
@@ -56,9 +158,28 @@ namespace ManateeConsole
             {
                 if (_capture != null && _capture.Ptr != IntPtr.Zero)
                 {
-                    _capture.Retrieve(_frame, 0);
+                    //_capture.Retrieve(_frame, 0);
+                    _frame = _capture.QueryFrame();
 
                     imgBx.Image = _frame;
+                }
+            }
+
+            public void ProcessFrame(object sender, EventArgs arg)
+            {
+                if(_capture != null)
+                {
+                    try
+                    {
+                        _capture.Retrieve(_frame, 0);
+                        //_frame = _capture.QuerySmallFrame();
+                        imgBx.Image = _frame;
+                        //System.Windows.MessageBox.Show(_frame.ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.ToString());
+                    }
                 }
             }
 

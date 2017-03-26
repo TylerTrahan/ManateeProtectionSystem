@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing; 
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +23,7 @@ using Emgu.CV;
 using Emgu.Util;
 using Emgu.CV.UI;
 using Emgu.CV.Structure;
+//using NationalInstruments.Controls;
 
 namespace ManateeConsole
 {
@@ -33,7 +33,7 @@ namespace ManateeConsole
     public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
         public static ViewModel viewmodel = new ViewModel();
-        public ATCore maincore;
+        public static ATCore maincore;
         private System.Windows.Controls.Button backButton;
 
         public MainWindow()
@@ -283,6 +283,35 @@ namespace ManateeConsole
             system.Activate();
         }
 
+        private void OnClickHydrophoneSettings(object sender, RoutedEventArgs e)
+        {
+            HydrophoneSettings hw;
+            hw = new HydrophoneSettings();
+            hw.DataContext = viewmodel;
+            hw.maincore = maincore;
+            hw.Show();
+            hw.Activate();
+        }
+
+        private void OnClickIPCameraSettings(object sender, RoutedEventArgs e)
+        {
+            ipCameraSettings ip;
+            ip = new ipCameraSettings();
+            ip.DataContext = viewmodel;
+            ip.maincore = maincore;
+            ip.Show();
+            ip.Activate();
+        }
+
+        private void OnClickPLCConnection(object sender, RoutedEventArgs e)
+        {
+            PLCSettings plc;
+            plc = new PLCSettings();
+            plc.DataContext = viewmodel;
+            plc.Show();
+            plc.Activate();
+        }
+
         //This function is called after MainWindow loads - PUT INITIALIZATION FUNCTIONS HERE
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -296,7 +325,7 @@ namespace ManateeConsole
             //-----Sonar EMGUCV ImageBoxes-----\\
             ExtendedWindowsFormsHost sonarhost1 = new ExtendedWindowsFormsHost();
             ExtendedWindowsFormsHost sonarhost2 = new ExtendedWindowsFormsHost();
-            ExtendedWindowsFormsHost sonarhost3 = new ExtendedWindowsFormsHost();
+            //ExtendedWindowsFormsHost sonarhost3 = new ExtendedWindowsFormsHost();
             sonarhost1.Child = maincore.son1.imgBx;
             sonarhost2.Child = maincore.son2.imgBx;
             //sonarhost3.Child = maincore.son3.imgBx;
@@ -319,16 +348,25 @@ namespace ManateeConsole
             //this.video3.Children.Add(videohost3);
 
             //this.graph.DataSource = maincore.hydro1.chartCollection;
+            //maincore.hydro1.acquisitionStart();
         }
 
-        //Timer Event Handler - Event: Tick for videos, every millisecond
+        private void Window_Closed(object sender, RoutedEventArgs e)
+        {
+            //maincore.hydro1.acquisitionStop();
+            maincore.clock.Stop();
+            maincore.sclock.Stop();
+        }
+
+        #region Timer ticks
+        //Timer Event Handler - Event: Tick for videos
         void timer_Tick(object sender, EventArgs e)
         {
             maincore.cam1.ProcessFrame();
             maincore.cam2.ProcessFrame();
-            //maincore.cam3.ProcessFrame();
+            //maincore.ip1.ProcessFrame();
         }
-        //Timer Event Handler - Event: Tick for sonar, every 2 seconds
+        //Timer Event Handler - Event: Tick for sonar
         void timer2_Tick(object sender, EventArgs e)
         {
             if (maincore.son1!=null && maincore.son1.isConnected)
@@ -339,40 +377,8 @@ namespace ManateeConsole
             {
                 maincore.son2.ProcessFrame();
             }
-            //maincore.son3.ProcessFrame();
         }
-
-        //private void btn_PLCConnection_Click(object sender, RoutedEventArgs e)
-        //{
-        //    maincore.hydro1.acquisitionChanged(object sender, );
-        //}
-
-    }
-
-    public static class ApplicationState
-    {
-        private static Dictionary<string, object> _values = new Dictionary<string, object>();
-
-        public static void SetValue(string key, object value)
-        {
-            if (_values.ContainsKey(key))
-            {
-                _values.Remove(key);
-            }
-            _values.Add(key, value);
-        }
-
-        public static T GetValue<T>(string key)
-        {
-            if (_values.ContainsKey(key))
-            {
-                return (T)_values[key];
-            }
-            else
-            {
-                return default(T);
-            }
-        }
+        #endregion
 
     }
 

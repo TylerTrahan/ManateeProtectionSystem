@@ -81,18 +81,6 @@ namespace ManateeConsole
 
         private void OnClickOK(object sender, RoutedEventArgs e)
         {
-            //ApplicationState.SetValue("sonarIpaddr1", ipaddr1.Text);
-            //ApplicationState.SetValue("sonarIpaddr2", ipaddr2.Text);
-            //ApplicationState.SetValue("sonarIpaddr3", ipaddr3.Text);
-            //ApplicationState.SetValue("sonarIpaddr4", ipaddr4.Text);
-            ApplicationState.SetValue("sonarChecked1", checkBox1.IsChecked);
-            ApplicationState.SetValue("sonarChecked2", checkBox2.IsChecked);
-            ApplicationState.SetValue("sonarChecked3", checkBox3.IsChecked);
-            ApplicationState.SetValue("sonarChecked4", checkBox4.IsChecked);
-            //ApplicationState.SetValue("sonarHost1", sonarHost1);
-            //ApplicationState.SetValue("sonarHost2", sonarHost2);
-            //ApplicationState.SetValue("sonarHost3", sonarHost3); 
-
             this.Close();
         }
         private void OnClickCancel(object sender, RoutedEventArgs e)

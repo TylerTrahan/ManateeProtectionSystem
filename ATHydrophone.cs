@@ -26,19 +26,16 @@ namespace ManateeConsole
         private AnalogSingleChannelReader reader;
         private Task runningTask;
         private AnalogWaveform<double> data = new AnalogWaveform<double>(1000);
+        //public double[] data = new double[1000];
+        public ViewModel viewmodel;
 
         double samplingRate;
         int samplesPerChannel;
 
-        double[] autoPowerSpectrum;
-        double searchFrequency;
-        double equivalentNoiseBandwidth;
-        double coherentGain;
-        double df;
-
-        public NationalInstruments.Controls.ChartCollection<double> chartCollection;
-        List<double> pointsForAnalysis;
-
+        public ATHydrophone()
+        {
+            viewmodel = MainWindow.viewmodel;
+        }
 
         private void myCallback(IAsyncResult ar)
         {
@@ -49,17 +46,14 @@ namespace ManateeConsole
                     data = reader.EndReadWaveform(ar);
                     
                     //Acquire Data
-                    //acquiredDataWaveformGraph.PlotWaveform(data);
-                    //chartCollection.Append(data.GetRawData());
-                    double[] dataPoint = data.GetRawData(0,1);
-                    MessageBox.Show(dataPoint.ToString());
+                    for (int i = 0; i < data.SampleCount; i++)
+                    {
+                         double d = data.Samples[i].Value;
+                    }
 
-                    //getUnitConvertedAutoPowerSpectrum(data); // Get power spectrum of signal waveform. 
-                    // Call the following function to calculate current powerPeak and frequencyPeak.
-                    //currentPeakData();
-
-                    // continue to acquire if task still running
+                    // Continue to acquire if task still running
                     reader.BeginMemoryOptimizedReadWaveform(samplesPerChannel, new AsyncCallback(myCallback), myTask, data);
+                    
                 }
             }
             catch (DaqException ex)
@@ -70,7 +64,7 @@ namespace ManateeConsole
             }
         }
 
-        public void acquisitionChanged(object sender, NationalInstruments.UI.ActionEventArgs e)
+        public void acquisitionStart()
         {
             try 
             {   // Acquisition ON
@@ -81,7 +75,7 @@ namespace ManateeConsole
 
                     myTask = new Task();
 
-                    myTask.AIChannels.CreateVoltageChannel(@"Dev1 / ai0", "aiChannel", AITerminalConfiguration.Differential, -10.0,
+                    myTask.AIChannels.CreateVoltageChannel(@"Dev1/ai0", "aiChannel", AITerminalConfiguration.Differential, -10.0,
                         10.0, AIVoltageUnits.Volts);  
             
                     myTask.Timing.ConfigureSampleClock("",samplingRate,SampleClockActiveEdge.Rising,
@@ -90,23 +84,7 @@ namespace ManateeConsole
                     reader = new AnalogSingleChannelReader(myTask.Stream);
                     
                     reader.SynchronizeCallbacks = true;
-                    reader.BeginMemoryOptimizedReadWaveform(samplesPerChannel, new AsyncCallback(myCallback), myTask,data);
-
-                    //rateNumericEdit.Enabled = false;
-                    //samplesNumericEdit.Enabled = false;
-                    //channelTextBox.Enabled = false;
-                }
-                            
-                else // Acquisition OFF
-                {
-                    if (runningTask != null)    
-                    {                       
-                        runningTask = null;
-                        myTask.Dispose();           
-                    }
-                    //rateNumericEdit.Enabled = true;
-                    //samplesNumericEdit.Enabled = true;
-                    //channelTextBox.Enabled = true;
+                    reader.BeginMemoryOptimizedReadWaveform(samplesPerChannel, new AsyncCallback(myCallback), myTask, data);
                 }
             }
             catch (DaqException ex)
@@ -117,62 +95,24 @@ namespace ManateeConsole
             }
 
         }
-                
-        
-        //void getUnitConvertedAutoPowerSpectrum(AnalogWaveform<double> waveform)
-        //{
-        //    double []unitConvertedSpectrum;
-        //    double []subsetOfUnitConvertedSpectrum = new double[samplesPerChannel/2];
-        //    System.Text.StringBuilder unit;
-        //    int i;           
-            
-        //    ScalingMode scalingMode = ScalingMode.Linear;
-        //    DisplayUnits displayUnit = DisplayUnits.VoltsRms;
-        //    ScaledWindow scaledWindow;
 
-        //    double[] data = waveform.GetScaledData();
-        //    scaledWindow.Apply(data, out equivalentNoiseBandwidth, out coherentGain); 
-            
-        //    // Calculate the auto power spectrum of signal waveform.
-        //    autoPowerSpectrum = new double[samplesPerChannel];
-        //    autoPowerSpectrum = Measurements.AutoPowerSpectrum(data, waveform.Timing.SampleInterval.TotalSeconds, out df);
-            
-        //    // Unit conversion of auto power spectrum as specified by the user.
-        //    unit = new System.Text.StringBuilder("V", 256);         
-        //    unitConvertedSpectrum = new double[samplesPerChannel];
-        //    unitConvertedSpectrum = Measurements.SpectrumUnitConversion(autoPowerSpectrum,
-        //        SpectrumType.Power, scalingMode, displayUnit, df, 
-        //        equivalentNoiseBandwidth, coherentGain, unit);
-
-        //    //Set the caption of yAxis according to the chosen unit of display.
-        //    powerSpectrumYAxis.Caption = unit.ToString();
-
-        //    for(i=0; i<(samplesPerChannel/2); i++)
-        //    {
-        //        subsetOfUnitConvertedSpectrum[i] = unitConvertedSpectrum[i];
-        //    }
-
-        //    // Plot unitConvertedSpectrum.
-        //    powerSpectrumWaveformGraph.PlotY(subsetOfUnitConvertedSpectrum, 0, df);
-        //}
-        
-
-        //void currentPeakData()
-        //{
-        //    double frequencyPeak;
-        //    double powerPeak;       
-            
-        //    // Get the current XPosition of cursor
-        //    searchFrequency = xyCursor.XPosition; 
-
-        //    // Apply PowerFrequencyEstimate function 
-        //    Measurements.PowerFrequencyEstimate(autoPowerSpectrum, searchFrequency,
-        //        equivalentNoiseBandwidth, coherentGain, df, 7, out frequencyPeak, out powerPeak);
-
-        //    // Update Frequency Peak and Power Frequency 
-        //    peakFrequencyNumericEdit.Value = frequencyPeak;
-        //    peakPowerNumericEdit.Value = powerPeak;
-        //}
+        public void acquisitionStop()
+        {
+            try
+            {
+                if (runningTask != null)
+                {
+                    runningTask = null;
+                    myTask.Dispose();
+                }
+            }
+            catch (DaqException ex)
+            {
+                MessageBox.Show(ex.Message);
+                runningTask = null;
+                myTask.Dispose();
+            }
+        }
     }
 
 }

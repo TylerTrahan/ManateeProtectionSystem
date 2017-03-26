@@ -33,7 +33,6 @@ namespace BVTSDK
             //-----ATSONAR FIELDS----\\
             Sonar son = new Sonar();
             Head head;
-            bool IsPaired = false;
             bool IsConnected = false;
             int ret = -1;                                                    //Used in error checking
             public int headCount = -1;
@@ -43,7 +42,6 @@ namespace BVTSDK
             public string testString = "0";                                  //Used for my testing
             string sonarType;
             string sonarPath;
-            string ip;
             public int ping_num = 1;                                                //Current ping number
             private ImageGenerator imager = null;
             private bool _captureInProgress = false; 
@@ -53,8 +51,6 @@ namespace BVTSDK
             //These will be deprecated when I write File Manager
             public string magImagePath = @"C:\MagImg.PGM";
             public string colorImagePath = @"C:\ColorImg.PPM";
-
-
 
             //----ATSONAR CONSTRUCTOR----\\
             public ATSonar(string addr, int headNum,float startRange, float stopRange)
@@ -230,9 +226,16 @@ namespace BVTSDK
                 //Copy bits for cimg and create the mat image with it
                 imageBits = new IntPtr(cimg.Bits);
 
-                mat = new Mat(size1, DepthType.Cv8U, 4, imageBits, width * 4);
-                copy = mat.Clone();
-
+                //mat = new Mat(size1, DepthType.Cv8U, 4, imageBits, width * 4);
+                try
+                {
+                    mat = new Mat(size1, DepthType.Cv8U, 4, imageBits, width * 4);
+                    copy = mat.Clone();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.ToString());
+                }
                 //Clean up garbage
                 cimg.Dispose();
                 mat.Dispose();
@@ -247,7 +250,7 @@ namespace BVTSDK
                 {
                     _captureInProgress = true;
                     MagImage mg = getMagImage(pingNum);
-                    if (ping_num < pingCount)
+                    if (ping_num < pingCount && sonarType!="NET")
                     {
                         ping_num++;
                     }
@@ -268,29 +271,44 @@ namespace BVTSDK
             }
             public void ProcessFrame()
             {
+                Mat frame_copy = new Mat();
                 if (sonarType == "FILE")
                 {
-                    //----This is for playing a sonar file on a loop
-                    if (ping_num != pingCount)
+                    try
                     {
-                        _frame = getFrame(ping_num);
-
-                        imgBx.Image = _frame;
-
-                        _captureInProgress = false;
+                        //----This is for playing a sonar file on a loop
+                        if (ping_num != pingCount)
+                        {
+                            _frame = getFrame(ping_num);
+                            frame_copy = _frame;
+                            imgBx.Image = frame_copy;
+                            _captureInProgress = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.ToString());
                     }
                 }   //----This is for playing a live sonar
                 else if (sonarType == "NET")
                 {
-                    _frame = getFrame(-1);
-
-                    imgBx.Image = _frame;
-                    _captureInProgress = false;
+                    try
+                    {
+                        _frame = getFrame(-1);
+                        frame_copy = _frame;
+                        imgBx.Image = frame_copy;
+                        _captureInProgress = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.ToString());
+                    }
                 }
                 else
                 {
                     System.Windows.MessageBox.Show("Error in choosing the sonar type");
                 }
+               
             }
 
             public String getFileName(string baseName)
