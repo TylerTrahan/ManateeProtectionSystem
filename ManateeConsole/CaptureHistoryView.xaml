@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ManateeConsole"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
@@ -15,7 +16,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Label Content="Select date and time:" Grid.Column="0" />
-            <xctk:DateTimeUpDown Format="FullDateTime" Grid.Column="1" x:Name="DateTimePicker" />
+            <xctk:DateTimeUpDown Format="FullDateTime" Value="{x:Static system:DateTime.Now}" Grid.Column="1" x:Name="DateTimePicker" />
             <Button Content="Find" Grid.Column="2" Click="FindButton_OnClick" />
         </Grid>
         <ScrollViewer>
