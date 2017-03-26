@@ -77,7 +77,7 @@ namespace ManateeConsole
                 }
                 else if (captureType == 2)
                 {
-                    throw new NotSupportedException(nameof(captureType));
+                    throw new NotSupportedException("captureType");
                     //Camera capture from card
                     /*
                     try
@@ -126,7 +126,7 @@ namespace ManateeConsole
                 }
                 else if (captureType == 2)
                 {
-                    throw new NotSupportedException(nameof(captureType));
+                    throw new NotSupportedException("captureType");
                     //Camera capture from card
                     /*
                     try

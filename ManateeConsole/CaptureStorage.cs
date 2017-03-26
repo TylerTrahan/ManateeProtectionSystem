@@ -19,7 +19,7 @@ namespace ManateeConsole
     internal class CaptureStorage : IDisposable
     {
         private static readonly Lazy<CaptureStorage> LazyInstance = new Lazy<CaptureStorage>(() => new CaptureStorage());
-        public static CaptureStorage Instance => LazyInstance.Value;
+        public static CaptureStorage Instance { get { return LazyInstance.Value; } }
 
         private readonly CaptureStorageContext _db;
         private readonly object _dbLock = new object();
@@ -91,11 +91,11 @@ namespace ManateeConsole
                 }
                 catch (Exception e)
                 {
-                    throw new CaptureStorageException($"Failed to create Capture folder '{_imageFolderInfo.FullName}'", e);
+                    throw new CaptureStorageException(string.Format("Failed to create Capture folder '{0}'", _imageFolderInfo.FullName), e);
                 }
             }
             var now = DateTimeOffset.UtcNow;
-            string fileName = $"{now.ToString("yyyyMMdd_HHmmssfffffff")}.{suffix}.bmp";
+            string fileName = String.Format("{0}.{1}.bmp", now.ToString("yyyyMMdd_HHmmssfffffff"), suffix);
             var filePath = Path.Combine(_imageFolderInfo.FullName, fileName);
             try
             {
@@ -103,7 +103,7 @@ namespace ManateeConsole
             }
             catch (Exception e)
             {
-                throw new CaptureStorageException($"Failed to save image to file '{filePath}'", e);
+                throw new CaptureStorageException(String.Format("Failed to save image to file '{0}'", filePath), e);
             }
             return filePath;
         }
