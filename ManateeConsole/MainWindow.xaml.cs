@@ -26,16 +26,15 @@ using Emgu.CV.UI;
 using Emgu.CV.Structure;
 using MahApps.Metro.Controls;
 
-//using NationalInstruments.Controls;
-
 namespace ManateeConsole
 {
         /// <summary>
         /// Interaction logic for MainWindow.xaml for the Manatee Protection System main console
         /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : MahApps.Metro.Controls.MetroWindow
     {
-        public static ViewModel viewmodel = new ViewModel();
+        private static readonly Lazy<ViewModel> lazyviewmodel = new Lazy<ViewModel>();
+        public static ViewModel viewmodel { get { return lazyviewmodel.Value; } }
         public static ATCore maincore;
         private System.Windows.Controls.Button backButton;
 
@@ -315,6 +314,12 @@ namespace ManateeConsole
             plc.Activate();
         }
 
+        private void btn_FFT_Click(object sender, RoutedEventArgs e)
+        {
+            FFTWindow fft = new FFTWindow();
+            fft.Show();
+        }
+
         //This function is called after MainWindow loads - PUT INITIALIZATION FUNCTIONS HERE
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -371,39 +376,128 @@ namespace ManateeConsole
 
         Task _frameSaveTask = Task.CompletedTask;
 
+        private void EnqueueCaptureTask(IImage sourceFrame, CaptureSource source)
+        {
+            var timestamp = DateTime.UtcNow;
+            var frame = (IImage)sourceFrame.Clone();
+            _frameSaveTask = _frameSaveTask.ContinueWith(t =>
+            {
+                CaptureStorage.Instance.AddCapture(frame, source, timestamp: timestamp);
+                frame.Dispose();
+            });
+        }
+
         #region Timer ticks
         //Timer Event Handler - Event: Tick for videos
         void timer_Tick(object sender, EventArgs e)
         {
-            var cam1Ts = DateTime.UtcNow;
-            var cam1Frame = maincore.cam1.ProcessFrame();
-            _frameSaveTask = _frameSaveTask.ContinueWith(t => CaptureStorage.Instance.AddCapture(cam1Frame, CaptureSource.Camera1, timestamp: cam1Ts));
-            var cam2Ts = DateTime.UtcNow;
-            var cam2Frame = maincore.cam2.ProcessFrame();
-            _frameSaveTask = _frameSaveTask.ContinueWith(t => CaptureStorage.Instance.AddCapture(cam2Frame, CaptureSource.Camera2, timestamp: cam2Ts));
+            EnqueueCaptureTask(maincore.cam1.ProcessFrame(), CaptureSource.Camera1);
+            EnqueueCaptureTask(maincore.cam2.ProcessFrame(), CaptureSource.Camera2);
+
             //maincore.ip1.ProcessFrame();
         }
         //Timer Event Handler - Event: Tick for sonar
         void timer2_Tick(object sender, EventArgs e)
         {
-            if (maincore.son1!=null && maincore.son1.isConnected)
+            if (maincore.son1 != null && maincore.son1.isConnected)
             {
-                var cam1Ts = DateTime.UtcNow;
-                var son1Frame = maincore.son1.ProcessFrame();
-                _frameSaveTask = _frameSaveTask.ContinueWith(t => CaptureStorage.Instance.AddCapture(son1Frame, CaptureSource.Sonar1, timestamp: cam1Ts));
+                EnqueueCaptureTask(maincore.son1.ProcessFrame(), CaptureSource.Sonar1);
             }
-            if (maincore.son2!=null && maincore.son2.isConnected)
+            if (maincore.son2 != null && maincore.son2.isConnected)
             {
-                var cam2Ts = DateTime.UtcNow;
-                var son2Frame = maincore.son2.ProcessFrame();
-                _frameSaveTask = _frameSaveTask.ContinueWith(t => CaptureStorage.Instance.AddCapture(son2Frame, CaptureSource.Sonar2, timestamp: cam2Ts));
+                EnqueueCaptureTask(maincore.son2.ProcessFrame(), CaptureSource.Sonar2);
             }
         }
         #endregion
 
         private void Btn_CaptureHistory_OnClick(object sender, RoutedEventArgs e)
         {
-            new Window() {Content = new CaptureHistoryView()}.ShowDialog();
+            new MetroWindow() 
+            { 
+                Width = 1000, Height = 750, 
+                WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen, 
+                Title = "CAPTURE HISTORY",
+                Content = new CaptureHistoryView() 
+            }.ShowDialog();
+        }
+
+        private void btn_son1_head1_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (maincore.son1.headCount > 1)
+                {
+                    maincore.son1.connectHead(1);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("There is only one head on this sonar...");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Unable to connect to 2nd sonar head...Connecting to head 1");
+                maincore.son1.connectHead(0);
+            }
+        }
+
+        private void btn_son2_head1_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (maincore.son2.headCount > 1)
+                {
+                    maincore.son2.connectHead(1);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("There is only one head on this sonar...");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Unable to connect to 2nd sonar head...Connecting to head 1");
+                maincore.son1.connectHead(0);
+            }
+
+        }
+
+        private void btn_SetRangeSon1_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (maincore.son1.isConnected == true)
+                {
+                    maincore.son1.setRange(viewmodel.startRange_s1, viewmodel.stopRange_s1);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Unable to set range in sonar 1!");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString());
+            }
+        }
+
+        private void btn_SetRangeSon2_Click(object sender, RoutedEventArgs e)
+        {
+                        try
+            {
+                if (maincore.son1.isConnected == true)
+                {
+                    maincore.son1.setRange(viewmodel.startRange_s1, viewmodel.stopRange_s1);
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("Unable to set range in sonar 2!");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.ToString());
+            }
         }
     }
 

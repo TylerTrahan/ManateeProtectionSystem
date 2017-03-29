@@ -11,6 +11,19 @@ namespace ManateeConsole
 
     public class ViewModel : INotifyPropertyChanged
     {
+        private const int Count = 1024;
+        private readonly double[] _re = new double[1024];
+        private readonly double[] _im = new double[1024];
+        private IXyDataSeries<double, double> _dataSeries;
+
+        private bool _isFrequencyDomain;
+        private bool _isTimeDomain;
+
+        private DoubleRange _xVisibleRange;
+        private DoubleRange _yVisibleRange;
+
+        private readonly FFT _transform;
+
         private IDataSeries<double, double> voltageDataSeries;
         
         private IDataSeries<double, double> amplitudeDataSeries;
@@ -34,18 +47,23 @@ namespace ManateeConsole
         #region ViewModel Constructor
         public ViewModel()
         {
+            VoltageDataSeries = new XyDataSeries<double, double>();
+            AmplitudeDataSeries = new XyDataSeries<double, double>();
+            DataSeries = new XyDataSeries<double, double>();
+
+            _transform = new FFT();
+            _transform.init(10);
+
+            IsFrequencyDomain = true;     
             _timerNewDataUpdate = new Timer(dt * 1000);
             _timerNewDataUpdate.AutoReset = true;
             _timerNewDataUpdate.Elapsed += OnNewData;
 
             ViewportManager = new DefaultViewportManager();
 
-            // Create a DataSeriesSet
-            VoltageDataSeries = new XyDataSeries<double, double>();
-            AmplitudeDataSeries = new XyDataSeries<double, double>();
-
             VoltageDataSeries.FifoCapacity = FifoSize;
             AmplitudeDataSeries.FifoCapacity = FifoSize / RMSSamples;
+            DataSeries.FifoCapacity = FifoSize;
 
             MaxDb = new DoubleRange(0, 200);
 
@@ -880,7 +898,9 @@ namespace ManateeConsole
                 RMSTally += y1 * y1;
                 RMSCount++;
             }
-            
+
+            UpdateData(); // updates the FFT chart 
+
             //var db = 20 * Math.Log10(y1) - 120;
             //AmplitudeDataSeries.Append(t, db);
            
@@ -925,6 +945,7 @@ namespace ManateeConsole
                 OnPropertyChanged("VoltageDataSeries");
             }
         }
+
         public IDataSeries<double, double> AmplitudeDataSeries
         {
             get { return amplitudeDataSeries; }
@@ -936,5 +957,119 @@ namespace ManateeConsole
         }
 
         public IViewportManager ViewportManager { get; set; }
+
+        public string YAxisTitle
+        {
+            get { return IsTimeDomain ? "Voltage (V)" : "FFT(Voltage) (dB)"; }
+        }
+
+        public DoubleRange YVisibleRange
+        {
+            get { return _yVisibleRange; }
+            set
+            {
+                _yVisibleRange = value;
+                OnPropertyChanged("YVisibleRange");
+            }
+        }
+
+        public DoubleRange XVisibleRange
+        {
+            get { return _xVisibleRange; }
+            set
+            {
+                _xVisibleRange = value;
+                OnPropertyChanged("XVisibleRange");
+            }
+        }
+
+        public IXyDataSeries<double, double> DataSeries
+        {
+            get { return _dataSeries; }
+            set
+            {
+                _dataSeries = value;
+                OnPropertyChanged("DataSeries");
+            }
+        }
+
+        public bool IsFrequencyDomain
+        {
+            get { return _isFrequencyDomain; }
+            set
+            {
+                if (_isFrequencyDomain == value)
+                    return;
+
+                _isFrequencyDomain = value;
+                IsTimeDomain = !value;
+
+                if (IsFrequencyDomain)
+                {
+                    UpdateData();
+                    ZoomExtents();
+                    XVisibleRange = new DoubleRange(0, (Count / 2) - 1);
+                }
+
+                OnPropertyChanged("IsFrequencyDomain");
+                OnPropertyChanged("YAxisTitle");
+            }
+        }
+
+        public bool IsTimeDomain
+        {
+            get { return _isTimeDomain; }
+            set
+            {
+                if (_isTimeDomain == value)
+                    return;
+                _isTimeDomain = value;
+                IsFrequencyDomain = !value;
+
+                if (IsTimeDomain)
+                {
+                    UpdateData();
+                    ZoomExtents();
+                    XVisibleRange = new DoubleRange(0, Count - 1);
+                }
+
+                OnPropertyChanged("IsTimeDomain");
+                OnPropertyChanged("YAxisTitle");
+            }
+        }
+
+        private void ZoomExtents()
+        {
+            DataSeries.InvalidateParentSurface(RangeMode.ZoomToFitY);
+        }
+
+        private void UpdateData()
+        {
+            lock (this)
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    _re[i] = 2.0 * Math.Sin(2 * Math.PI * i / 20) +
+                            5.0 * Math.Sin(2 * Math.PI * i / 10) +
+                            2.0 * _random.NextDouble();
+                    _im[i] = IsFrequencyDomain ? 0.0 : i;
+                }
+
+                if (IsFrequencyDomain)
+                {
+                    _transform.run(_re, _im);
+                    for (int i = 0; i < Count; i++)
+                    {
+                        double mag = Math.Sqrt(_re[i] * _re[i] + _im[i] * _im[i]);
+                        _re[i] = 20 * Math.Log10(mag / Count);
+                        _im[i] = i;
+                    }
+                }
+
+                DataSeries.SeriesName = YAxisTitle;
+                DataSeries.Clear();
+                DataSeries.Append(_im, _re);
+            }
+        }
     }
 }

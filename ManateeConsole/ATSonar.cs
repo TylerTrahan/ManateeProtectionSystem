@@ -28,12 +28,13 @@ using Emgu.CV.CvEnum;
 
 namespace BVTSDK
 {
-        public class ATSonar
+        public class ATSonar : IDisposable
         {
             //-----ATSONAR FIELDS----\\
             Sonar son = new Sonar();
             Head head;
             bool IsConnected = false;
+            bool _disposed;
             int ret = -1;                                                    //Used in error checking
             public int headCount = -1;
             public int pingCount = -1;
@@ -52,50 +53,75 @@ namespace BVTSDK
             public string magImagePath = @"C:\MagImg.PGM";
             public string colorImagePath = @"C:\ColorImg.PPM";
 
-            //----ATSONAR CONSTRUCTOR----\\
-            public ATSonar(string addr, int headNum,float startRange, float stopRange)
+        //----ATSONAR CONSTRUCTOR----\\
+        public ATSonar(string addr, int headNum, float startRange, float stopRange)
+        {
+            //This is an ImageBox to display the sonars on the main console  - It works similar to ATCamera
+            imgBx = new ImageBox();
+            imgBx.FunctionalMode = ImageBox.FunctionalModeOption.Minimum;
+            imgBx.SizeMode = PictureBoxSizeMode.StretchImage;
+            imgBx.BackColor = System.Drawing.Color.Black;
+
+            if (IsValidIP(addr))
             {
-                //This is an ImageBox to display the sonars on the main console  - It works similar to ATCamera
-                imgBx = new ImageBox();
-                imgBx.FunctionalMode = ImageBox.FunctionalModeOption.Minimum;
-                imgBx.SizeMode = PictureBoxSizeMode.StretchImage;
-                imgBx.BackColor = System.Drawing.Color.Black;
-
-                if (IsValidIP(addr))
-                {
-                    sonarPath = addr;
-                    sonarType = "NET"; 
-                }
-                else 
-                {
-                    sonarPath = addr;
-                    sonarType = "FILE";
-                }
-
-                //Initialize this sonar
-                try
-                {
-                    createSonar(addr);
-                    connectHead(headNum);
-                    start_range = startRange;
-                    stop_range = stopRange;
-                    ping_num = 1;
-                    setRange(start_range, stop_range);
-                    imager = new ImageGenerator();
-                    if (head != null)
-                    {
-                        imager.SetHead(head);
-                    }
-                    if (son != null && head != null)
-                    {
-                        IsConnected = true;
-                    }
-                }
-                catch (Exception e)
-                {
-                    IsConnected = false;
-                }
+                sonarPath = addr;
+                sonarType = "NET";
             }
+            else
+            {
+                sonarPath = addr;
+                sonarType = "FILE";
+            }
+
+            //Initialize this sonar
+            try
+            {
+                createSonar(addr);
+                connectHead(headNum);
+                start_range = startRange;
+                stop_range = stopRange;
+                ping_num = 1;
+                setRange(start_range, stop_range);
+                imager = new ImageGenerator();
+                if (head != null)
+                {
+                    imager.SetHead(head);
+                }
+                if (son != null && head != null)
+                {
+                    IsConnected = true;
+                }
+                _disposed = false;
+            }
+            catch (Exception)
+            {
+            }
+        }
+                    /// Non-deterministic destruction of this object on the Finalizer thread
+            ~ATSonar()
+            {
+                Dispose(false);
+            }
+
+            /// Dispose deterministically
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (_disposed)
+                    return;
+                _disposed = true;
+                if (imager != null) imager.Dispose();
+                if (_frame != null) _frame.Dispose();
+                if (imgBx != null) imgBx.Dispose();
+                if (head != null) head.Dispose();
+                if (son != null) son.Dispose();
+            }
+
 
             //----ATSONAR MEMBERS----\\
             private bool IsValidIP(string addrText)
@@ -202,7 +228,7 @@ namespace BVTSDK
             public ColorImage getColorImage(MagImage mImg)
             {
                 ColorMapper cmap = new ColorMapper();
-                ColorImage cimg = new ColorImage();
+                ColorImage cimg = null;
 
                 if(mImg != null)
                 {
@@ -212,12 +238,12 @@ namespace BVTSDK
                 cmap.Dispose();
                 mImg.Dispose();
 
-                return cimg;
+                return cimg == null ? new ColorImage() : cimg;
             }               //TODO: Examine different color maps, choose
             public Mat getMatImage(ColorImage cimg)
             {
-                Mat mat = new Mat();
-                Mat copy = new Mat();
+                Mat mat = null;
+                Mat copy = null;
                 IntPtr imageBits;
                 //IntPtr dataPtr;
                 System.Drawing.Size size1;
@@ -243,9 +269,10 @@ namespace BVTSDK
                 {
                     System.Windows.Forms.MessageBox.Show(ex.ToString());
                 }
+                if (copy == null) copy = new Mat();
                 //Clean up garbage
                 cimg.Dispose();
-                mat.Dispose();
+                if (mat != null) mat.Dispose();
 
                 return copy;
             }
@@ -278,7 +305,7 @@ namespace BVTSDK
             }
             public IImage ProcessFrame()
             {
-                Mat frame_copy = new Mat();
+                Mat frame_copy = null;
                 if (sonarType == "FILE")
                 {
                     try
@@ -286,9 +313,10 @@ namespace BVTSDK
                         //----This is for playing a sonar file on a loop
                         if (ping_num != pingCount)
                         {
-                            _frame = getFrame(ping_num);
                             frame_copy = _frame;
-                            imgBx.Image = frame_copy;
+                            _frame = getFrame(ping_num);
+                            imgBx.Image = _frame;
+                            if (frame_copy != null) frame_copy.Dispose();
                             _captureInProgress = false;
                         }
                     }
@@ -301,9 +329,10 @@ namespace BVTSDK
                 {
                     try
                     {
-                        _frame = getFrame(-1);
                         frame_copy = _frame;
-                        imgBx.Image = frame_copy;
+                        _frame = getFrame(-1);
+                        imgBx.Image = _frame;
+                        if (frame_copy != null) frame_copy.Dispose();
                         _captureInProgress = false;
                     }
                     catch (Exception ex)
@@ -315,7 +344,7 @@ namespace BVTSDK
                 {
                     System.Windows.MessageBox.Show("Error in choosing the sonar type");
                 }
-                return frame_copy;
+                return _frame;
             }
 
             public String getFileName(string baseName)

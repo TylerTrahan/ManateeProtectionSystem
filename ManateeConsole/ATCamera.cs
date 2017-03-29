@@ -75,11 +75,10 @@ namespace ManateeConsole
                         System.Windows.Forms.MessageBox.Show(excpt.Message);
                     }
                 }
+#if !DEV
                 else if (captureType == 2)
                 {
-                    throw new NotSupportedException("captureType");
                     //Camera capture from card
-                    /*
                     try
                     {
                         _capture = createLfgCapture(0);
@@ -88,8 +87,8 @@ namespace ManateeConsole
                     {
                         System.Windows.Forms.MessageBox.Show(excpt.Message);
                     }
-                    */
                 }
+#endif
                 else if (captureType == 3)
                 {
                     //IP Camera capture
@@ -124,11 +123,10 @@ namespace ManateeConsole
                         System.Windows.Forms.MessageBox.Show(excpt.Message);
                     }
                 }
+#if !DEV
                 else if (captureType == 2)
                 {
-                    throw new NotSupportedException("captureType");
                     //Camera capture from card
-                    /*
                     try
                     {
                         _capture = createLfgCapture(camNo);
@@ -137,8 +135,8 @@ namespace ManateeConsole
                     {
                         System.Windows.Forms.MessageBox.Show(excpt.Message);
                     }
-                    */
                 }
+#endif
                 else if (captureType == 3)
                 {
                     //IP Camera capture
@@ -153,11 +151,12 @@ namespace ManateeConsole
                 }
                 _frame = new Mat();
             }
-
-            //private static Lfg.Capture createLfgCapture(int camNo)
-            //{
-            //    return new Lfg.Capture(camNo);
-            //}
+#if !DEV
+        private static Lfg.Capture createLfgCapture(int camNo)
+            {
+                return new Lfg.Capture(camNo);
+            }
+#endif
             
             //----ATCAMERA MEMBERS----\\
             public IImage ProcessFrame()

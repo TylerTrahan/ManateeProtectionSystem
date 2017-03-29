@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !DEV
+using System;
 using System.Drawing;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,15 +7,15 @@ using System.Text;
 // This example only compiles if you install NI-DAQmx support from the Device Drivers CD
 using NationalInstruments.DAQmx;
 using NationalInstruments;
-using NationalInstruments.Analysis;
-using NationalInstruments.Analysis.Conversion;
-using NationalInstruments.Analysis.Dsp;
-using NationalInstruments.Analysis.Dsp.Filters;
-using NationalInstruments.Analysis.Math;
-using NationalInstruments.Analysis.Monitoring;
-using NationalInstruments.Analysis.SignalGeneration;
-// This example only compiles with Enterprise Analysis
-using NationalInstruments.Analysis.SpectralMeasurements;
+//using NationalInstruments.Analysis;
+//using NationalInstruments.Analysis.Conversion;
+//using NationalInstruments.Analysis.Dsp;
+//using NationalInstruments.Analysis.Dsp.Filters;
+//using NationalInstruments.Analysis.Math;
+//using NationalInstruments.Analysis.Monitoring;
+//using NationalInstruments.Analysis.SignalGeneration;
+//// This example only compiles with Enterprise Analysis
+//using NationalInstruments.Analysis.SpectralMeasurements;
 using System.Windows;
 
 namespace ManateeConsole
@@ -116,3 +117,4 @@ namespace ManateeConsole
     }
 
 }
+#endif

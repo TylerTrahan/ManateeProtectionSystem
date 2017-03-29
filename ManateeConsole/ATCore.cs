@@ -16,9 +16,8 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Windows.Forms.Integration; 
-//using WindowsControlLibrary1;
-using System.ComponentModel;
 using WindowsControlLibrary1;
+using System.ComponentModel; 
 
 //Include BlueView SDK Libraries
 using BVTSDK;
@@ -35,11 +34,14 @@ namespace ManateeConsole
     public class ATCore
     {
         //-----ATCORE FIELDS-----\\
+
         public ATSonar son1, son2;
         public ATCamera cam1, cam2;
         public ATCamera ip1;
         public smPanTilt pt1, pt2, pt3;
-        //public ATHydrophone hydro1;
+#if !DEV
+        public ATHydrophone hydro1;
+#endif
         public DispatcherTimer clock, sclock;
         public ViewModel viewmodel;
 
@@ -66,14 +68,23 @@ namespace ManateeConsole
 
             //son2.connectHead(1);    //-USE THIS TO CONNECT TO THE 2250 HEAD
             //son2.setRange(1, 15);
-
+#if DEV
             cam1 = new ATCamera(1, 0);
+            viewmodel.isConnected_c1 = true;
+            viewmodel.ipaddr_c1 = "CAMERA 1";
+
+            cam2 = new ATCamera(1, 0);
+            viewmodel.isConnected_c2 = true;
+            viewmodel.ipaddr_c2 = "CAMERA 2";
+#else
+            cam1 = new ATCamera(2, 0);
             viewmodel.isConnected_c1 = true;   
             viewmodel.ipaddr_c1 = "CAMERA 1";    
 
-            cam2 = new ATCamera(1, 0);
+            cam2 = new ATCamera(2, 0);
             viewmodel.isConnected_c2 = true;   
             viewmodel.ipaddr_c2 = "CAMERA 2";    
+#endif
 
             pt1 = new smPanTilt();
             pt1.AutoScaleMode = AutoScaleMode.Inherit;
@@ -90,7 +101,9 @@ namespace ManateeConsole
             pt2.cDataBits = 8;
             pt2.cStopBits = 1;
 
-            //hydro1 = new ATHydrophone();
+#if !DEV
+            hydro1 = new ATHydrophone();
+#endif
 
             //ip1 = new ATCamera(3);
             

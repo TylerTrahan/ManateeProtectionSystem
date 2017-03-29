@@ -27,7 +27,7 @@
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="3*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="textBlockSonar1" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="sonar1" VerticalAlignment="Bottom" Width="60"/>
+                            <TextBlock x:Name="textBlockSonar1" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Sonar1" VerticalAlignment="Bottom" Width="60"/>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
@@ -64,7 +64,7 @@
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="3*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock x:Name="textBlockSonar2" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="sonar2" VerticalAlignment="Bottom" Width="60"/>
+                            <TextBlock x:Name="textBlockSonar2" HorizontalAlignment="Left" Height="20" TextWrapping="Wrap" Text="Sonar2" VerticalAlignment="Bottom" Width="60"/>
                             <Grid Grid.Row="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
