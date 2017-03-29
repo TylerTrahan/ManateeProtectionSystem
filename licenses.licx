@@ -1,0 +1,15 @@
+NationalInstruments.Controls.Internal.WpfEnterpriseLicenser, NationalInstruments.Controls, Version=15.0.45.3898, Culture=neutral
+NationalInstruments.Controls.Internal.WpfProfessionalLicenser, NationalInstruments.Controls, Version=15.0.45.3898, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.Controls.Internal.WpfStandardLicenser, NationalInstruments.Controls, Version=15.0.45.3898, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.Tdms.TdmsLicenser, NationalInstruments.Tdms, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.Net.DataSocketSource, NationalInstruments.Net, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.Net.DataSocketServer, NationalInstruments.Net, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.Net.DataSocket, NationalInstruments.Net, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.NetworkVariable.WindowsForms.NetworkVariableDataSource, NationalInstruments.NetworkVariable, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.NetworkVariable.WindowsForms.NetworkVariableBrowserDialog, NationalInstruments.NetworkVariable, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.NetworkVariable.NetworkVariableLicenser, NationalInstruments.NetworkVariable, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.UI.WindowsForms.LedArray, NationalInstruments.UI.WindowsForms, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.UI.WindowsForms.SwitchArray, NationalInstruments.UI.WindowsForms, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.UI.WindowsForms.NumericEditArray, NationalInstruments.UI.WindowsForms, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.UI.WindowsForms.InstrumentControlStrip, NationalInstruments.UI.WindowsForms, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298
+NationalInstruments.Restricted.AnalysisLicenser, NationalInstruments.Analysis.Enterprise, Version=15.0.45.49153, Culture=neutral, PublicKeyToken=dc6ad606294fc298

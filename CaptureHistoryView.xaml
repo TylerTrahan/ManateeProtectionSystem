@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="ManateeConsole.CaptureHistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ManateeConsole"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Content="Select date and time:" Grid.Column="0" />
+            <DatePicker Grid.Column="1" x:Name="DatePicker" />
+            <StackPanel Orientation="Horizontal" Grid.Column="2">
+                <local:UpDown x:Name="HourTextBox" Min="0" Max="24" Format="D2" />
+                <TextBlock Text=":" Margin="5,0" VerticalAlignment="Center" />
+                <local:UpDown x:Name="MinTextBox" Min="0" Max="60" Format="D2" />
+                <TextBlock Text=":" Margin="5,0" VerticalAlignment="Center" />
+                <local:UpDown x:Name="SecTextBox" Min="0" Max="60" Format="D2" />
+            </StackPanel>
+            <Button Content="Find" Grid.Column="3" Click="FindButton_OnClick" />
+        </Grid>
+        <ScrollViewer>
+            <ItemsControl x:Name="CapturesControl">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:CaptureEntry}">
+                        <Border BorderThickness="1" BorderBrush="Black">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <!--
+                                <Grid.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="White"></Setter>
+                                        <Setter Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="Black" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Grid.Resources>
+                                -->
+                                <TextBlock Text="{Binding Timestamp}" HorizontalAlignment="Left" Grid.Row="0" Padding="5" />
+                                <TextBlock Text="{Binding GateState}" HorizontalAlignment="Right" Grid.Row="0" Padding="5" />
+                                <Image Source="{Binding FilePath}" Grid.Row="1" />
+                                <TextBlock Text="{Binding Source}" HorizontalAlignment="Left" Grid.Row="2" Padding="5" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type FrameworkElement}">
+                        <Setter Property="Width" Value="400" />
+                        <Setter Property="Height" Value="300" />
+                        <Setter Property="Margin" Value="10" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

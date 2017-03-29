@@ -1,0 +1,23 @@
+﻿<Window x:Name="PLCSettings1" x:Class="ManateeConsole.PLCSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PLCSettings" Height="339" Width="309.244" Loaded="OnWindowLoaded">
+    <Grid>
+        <Button Content="Left Sonar/PanTilt Disengage" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_1"/>
+        <Button Content="Right Sonar/PanTilt Disengage" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_2"/>
+        <Button Content="Light 1 Disengage" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_3"/>
+        <Button Content="Light 2 Disengage" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_4"/>
+        <Button Content="Motor 1 Up" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_5"/>
+        <Button Content="Motor 1 Down" HorizontalAlignment="Left" Margin="10,190,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_6"/>
+        <Button Content="Motor 2 Up" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_7"/>
+        <Button Content="Motor 2 Down" HorizontalAlignment="Left" Margin="10,250,0,0" VerticalAlignment="Top" Width="215" Height="25" Click="Button_Click_8" />
+        <Ellipse x:Name="Signal1" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,40,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+        <Ellipse x:Name="Signal2" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,70,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+        <Ellipse x:Name="Signal3" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,100,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+        <Ellipse x:Name="Signal4" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,130,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+        <Ellipse x:Name="Signal5" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,160,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+        <Ellipse x:Name="Signal6" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,190,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+        <Ellipse x:Name="Signal7" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,220,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+        <Ellipse x:Name="Signal8" Fill="WhiteSmoke" HorizontalAlignment="Left" Height="25" Margin="249,250,0,0" Stroke="Black" VerticalAlignment="Top" Width="26"/>
+    </Grid>
+</Window>
