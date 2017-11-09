@@ -45,13 +45,13 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
-            <s:SciChartSurface x:Name="SciChartVoltage" Grid.Row="0"  ViewportManager="{Binding ViewportManager}" Margin="3">
+            <!--<s:SciChartSurface x:Name="SciChartVoltage" Grid.Row="0"  ViewportManager="{Binding ViewportManager}" Margin="3">
 
                 <s:SciChartSurface.RenderableSeries>
                     <s:FastLineRenderableSeries DataSeries="{Binding VoltageDataSeries}" Stroke="#FFFFA500" StrokeThickness="3"/>
                 </s:SciChartSurface.RenderableSeries>
 
-                <!--  Create an X Axis  -->
+                --><!--  Create an X Axis  --><!--
                 <s:SciChartSurface.XAxis>
                     <s:NumericAxis MinHeight="50" AutoRange="Always" AxisTitle="Time (ms)" DrawMinorGridLines="False" DrawMinorTicks="False" TextFormatting="0.00">
                         <s:NumericAxis.GrowBy>
@@ -60,7 +60,7 @@
                     </s:NumericAxis>
                 </s:SciChartSurface.XAxis>
 
-                <!--  Create a Y Axis  -->
+                --><!--  Create a Y Axis  --><!--
                 <s:SciChartSurface.YAxis>
                     <s:NumericAxis AutoRange="Always" AxisTitle="Value" DrawMinorGridLines="False" DrawMinorTicks="False" TextFormatting="0.00">
                         <s:NumericAxis.GrowBy>
@@ -76,7 +76,7 @@
                     <s:FastLineRenderableSeries DataSeries="{Binding AmplitudeDataSeries}" Stroke="#FFE13219" StrokeThickness="3"/>
                 </s:SciChartSurface.RenderableSeries>
 
-                <!--  Create an X Axis  -->
+                --><!--  Create an X Axis  --><!--
                 <s:SciChartSurface.XAxis>
                     <s:NumericAxis MinHeight="50" AutoRange="Always" AxisTitle="Time (ms)" DrawMinorGridLines="False" DrawMinorTicks="False" TextFormatting="0.00">
                         <s:NumericAxis.GrowBy>
@@ -85,7 +85,7 @@
                     </s:NumericAxis>
                 </s:SciChartSurface.XAxis>
 
-                <!--  Create a Y Axis  -->
+                --><!--  Create a Y Axis  --><!--
                 <s:SciChartSurface.YAxis>
                     <s:NumericAxis AutoRange="Never" VisibleRange="{Binding MaxDb}" AxisTitle="Value" DrawMinorGridLines="False" DrawMinorTicks="False" TextFormatting="0.00">
                         <s:NumericAxis.GrowBy>
@@ -103,7 +103,7 @@
                                             StrokeThickness="2" />
                 </s:SciChartSurface.RenderableSeries>
 
-                <!--  Define X and Y Axis. Optional bands give a cool look and feel for minimal performance impact  -->
+                --><!--  Define X and Y Axis. Optional bands give a cool look and feel for minimal performance impact  --><!--
                 <s:SciChartSurface.YAxis>
                     <s:NumericAxis AxisTitle="{Binding YAxisTitle}"
                                DrawMinorGridLines="False"
@@ -128,7 +128,7 @@
                                       ShowTooltipOn="MouseLeftButtonDown" />
                     </s:ModifierGroup>
                 </s:SciChartSurface.ChartModifier>
-            </s:SciChartSurface>
+            </s:SciChartSurface>-->
             <!--<lvc:CartesianChart x:Name="dbVmicroPascalSeries" Series="{Binding SeriesCollection2}" Grid.Row="1"/>
             <lvc:CartesianChart x:Name="FourierSeries" Series="{Binding SeriesCollection3}" Grid.Row="2"/>-->
         </Grid>

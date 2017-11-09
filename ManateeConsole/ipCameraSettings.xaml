@@ -22,7 +22,7 @@
         <Border BorderBrush="Black" BorderThickness="5" Margin="10" Grid.Row="0" Grid.Column="1">
             <DockPanel x:Name="ip2" Grid.Column="1" Margin="5" VerticalAlignment="Stretch">
                 <WindowsFormsHost x:Name="ipHost2" Grid.Column="1" Margin="0" HorizontalAlignment="Stretch">
-                    <emui:ImageBox x:Name="ipImgBox2" />
+                    <!--<emui:ImageBox x:Name="ipImgBox2" />-->
                 </WindowsFormsHost>
             </DockPanel>
         </Border>

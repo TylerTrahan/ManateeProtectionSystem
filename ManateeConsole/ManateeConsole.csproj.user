@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ReferencePath>C:\Users\Tyler\Desktop\ManateeSoftware\ManateeConsole_2.0\ManateeConsole\ManateeConsole\DLL References\;C:\Users\Tyler\Desktop\ManateeSoftware\ManateeConsole_2.0\ManateeConsole\ManateeConsole\bin\x86\;C:\Users\Tyler\Desktop\ManateeSoftware\ManateeConsole_2.0\ManateeConsole\ManateeConsole\bin\x86\Debug\;C:\Users\Tyler\Desktop\ManateeSoftware\ManateeConsole_2.0\ManateeConsole\ManateeConsole\bin\x86\Release\;C:\Users\Tyler\Desktop\ManateeSoftware\ManateeConsole_2.0\ManateeConsole\ManateeConsole\;C:\Users\SFWMD\Desktop\ManateeConsole\ManateeConsole\DLL References\;C:\Users\SFWMD\Desktop\ManateeConsole\ManateeConsole\bin\x86\;C:\Users\SFWMD\Desktop\ManateeConsole\ManateeConsole\bin\x86\Debug\;C:\Users\SFWMD\Desktop\ManateeConsole\ManateeConsole\bin\x86\Release\;C:\Users\SFWMD\Desktop\ManateeConsole\ManateeConsole\;C:\OpenCV\build\install\include\;C:\OpenCV\build\install\include\opencv\;C:\OpenCV\build\install\include\opencv2\;C:\Users\VI-System2\Desktop\ManateeConsole_4.9.17\ManateeConsole_4.7.17\ManateeConsole\ManateeConsole\bin\;C:\Users\VI-System2\Desktop\ManateeConsole_4.9.17\ManateeConsole_4.7.17\ManateeConsole\ManateeConsole\bin\x64\Debug\;C:\Users\VI-System2\Desktop\ManateeConsole_4.9.17\ManateeConsole_4.7.17\ManateeConsole\ManateeConsole\bin\x64\Release\;C:\Python34\Lib\;C:\Python34\include\;C:\Python34\libs\</ReferencePath>
+    <PublishUrlHistory>publish\</PublishUrlHistory>
+    <InstallUrlHistory />
+    <SupportUrlHistory />
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+    <ProjectView>ProjectFiles</ProjectView>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+  </PropertyGroup>
+</Project>

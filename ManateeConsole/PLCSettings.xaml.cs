@@ -21,12 +21,34 @@ namespace ManateeConsole
     /// </summary>
     public partial class PLCSettings : Window
     {
+        ViewModel viewmodel = MainWindow.maincore.viewmodel;
+
         private const ArduinoModel AttachedArduino = ArduinoModel.UnoR3;
 
-        public ArduinoDriver.ArduinoDriver driver = new ArduinoDriver.ArduinoDriver(ArduinoModel.UnoR3, "COM9", true);
+        public ArduinoDriver.ArduinoDriver driver = null;
 
         public PLCSettings()
         {
+            if (viewmodel.isPLC_Connected == false)
+            {
+                try
+                {
+                    driver = new ArduinoDriver.ArduinoDriver(ArduinoModel.UnoR3, "COM9", true);
+                    viewmodel.driver = driver;
+                    viewmodel.isPLC_Connected = true;
+                }
+                catch (System.IO.IOException ex)
+                {
+                    System.Windows.MessageBox.Show("Arduino device is not connected");
+                    driver = null;
+                    return;
+                }
+            }
+            else
+            {
+                driver = viewmodel.driver;
+                //MessageBox.Show(viewmodel.isPLC_Connected.ToString());
+            }
             InitializeComponent();
         }
 
@@ -60,17 +82,17 @@ namespace ManateeConsole
                             this.Signal4.Fill = new SolidColorBrush(Colors.Red);
                             break;
                         case 6:
-                            this.Signal5.Fill = new SolidColorBrush(Colors.GreenYellow);
+                            this.Signal5.Fill = new SolidColorBrush(Colors.Red);
                             break;
                         case 7:
-                            this.Signal6.Fill = new SolidColorBrush(Colors.GreenYellow);
+                            this.Signal6.Fill = new SolidColorBrush(Colors.Red);
                             break;
                         case 8:
-                            this.Signal7.Fill = new SolidColorBrush(Colors.GreenYellow);
+                            this.Signal7.Fill = new SolidColorBrush(Colors.Red);
                             break;
-                        case 9:
-                            this.Signal8.Fill = new SolidColorBrush(Colors.GreenYellow);
-                            break;
+                        //case 9:
+                        //    this.Signal8.Fill = new SolidColorBrush(Colors.Red);
+                        //    break;
                         default:
                             break;
                     }
@@ -80,16 +102,16 @@ namespace ManateeConsole
                     switch(pin)
                     {
                         case 2:
-                            this.Signal1.Fill= new SolidColorBrush(Colors.GreenYellow);
+                            this.Signal1.Fill = new SolidColorBrush(Colors.WhiteSmoke);
                             break;
                         case 3:
-                            this.Signal2.Fill = new SolidColorBrush(Colors.GreenYellow);
+                            this.Signal2.Fill = new SolidColorBrush(Colors.WhiteSmoke);
                             break;
                         case 4:
-                            this.Signal3.Fill = new SolidColorBrush(Colors.GreenYellow);
+                            this.Signal3.Fill = new SolidColorBrush(Colors.WhiteSmoke);
                             break;
                         case 5:
-                            this.Signal4.Fill = new SolidColorBrush(Colors.GreenYellow);
+                            this.Signal4.Fill = new SolidColorBrush(Colors.WhiteSmoke);
                             break;
                         case 6:
                             this.Signal5.Fill = new SolidColorBrush(Colors.WhiteSmoke);
@@ -100,9 +122,9 @@ namespace ManateeConsole
                         case 8:
                             this.Signal7.Fill = new SolidColorBrush(Colors.WhiteSmoke);
                             break;
-                        case 9:
-                            this.Signal8.Fill = new SolidColorBrush(Colors.WhiteSmoke);
-                            break;
+                        //case 9:
+                        //    this.Signal8.Fill = new SolidColorBrush(Colors.WhiteSmoke);
+                        //    break;
                         default:
                             break;
                     }
@@ -132,7 +154,7 @@ namespace ManateeConsole
                 drResponse = driver.Send(new DigitalReadRequest(pin));
                 //MessageBox.Show(drResponse.PinValue.ToString());
 
-                this.Signal1.Fill = new SolidColorBrush(Colors.GreenYellow);
+                this.Signal1.Fill = new SolidColorBrush(Colors.WhiteSmoke);
 
             }
             else if(drResponse.PinValue ==ArduinoDriver.DigitalValue.High)
@@ -166,7 +188,7 @@ namespace ManateeConsole
                 dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.High));
                 drResponse = driver.Send(new DigitalReadRequest(pin));
                 //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal2.Fill = new SolidColorBrush(Colors.GreenYellow);
+                this.Signal2.Fill = new SolidColorBrush(Colors.WhiteSmoke);
             }
             else if (drResponse.PinValue == ArduinoDriver.DigitalValue.High)
             {
@@ -197,7 +219,7 @@ namespace ManateeConsole
                 dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.High));
                 drResponse = driver.Send(new DigitalReadRequest(pin));
                 //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal3.Fill = new SolidColorBrush(Colors.GreenYellow);
+                this.Signal3.Fill = new SolidColorBrush(Colors.WhiteSmoke);
             }
             else
             {
@@ -228,7 +250,7 @@ namespace ManateeConsole
                 dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.High));
                 drResponse = driver.Send(new DigitalReadRequest(pin));
                 //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal4.Fill = new SolidColorBrush(Colors.GreenYellow);
+                this.Signal4.Fill = new SolidColorBrush(Colors.WhiteSmoke);
             }
             else
             {
@@ -266,7 +288,7 @@ namespace ManateeConsole
                 dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.Low));
                 drResponse = driver.Send(new DigitalReadRequest(pin));
                 //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal5.Fill = new SolidColorBrush(Colors.GreenYellow);
+                this.Signal5.Fill = new SolidColorBrush(Colors.Red);
             }
         }
 
@@ -297,7 +319,7 @@ namespace ManateeConsole
                 dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.Low));
                 drResponse = driver.Send(new DigitalReadRequest(pin));
                 //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal6.Fill = new SolidColorBrush(Colors.GreenYellow);
+                this.Signal6.Fill = new SolidColorBrush(Colors.Red);
             }
         }
 
@@ -328,7 +350,7 @@ namespace ManateeConsole
                 dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.Low));
                 drResponse = driver.Send(new DigitalReadRequest(pin));
                 //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal7.Fill = new SolidColorBrush(Colors.GreenYellow);
+                this.Signal7.Fill = new SolidColorBrush(Colors.Red);
             }
         }
 
@@ -346,21 +368,21 @@ namespace ManateeConsole
             //Read the value on the pin currently
             drResponse = driver.Send(new DigitalReadRequest(pin));
 
-            //If value is high, switch to low. If the value is low, switch to high
-            if (drResponse.PinValue == ArduinoDriver.DigitalValue.Low)
-            {
-                dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.High));
-                drResponse = driver.Send(new DigitalReadRequest(pin));
-                //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal8.Fill = new SolidColorBrush(Colors.WhiteSmoke);
-            }
-            else
-            {
-                dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.Low));
-                drResponse = driver.Send(new DigitalReadRequest(pin));
-                //MessageBox.Show(drResponse.PinValue.ToString());
-                this.Signal8.Fill = new SolidColorBrush(Colors.GreenYellow);
-            }
+            ////If value is high, switch to low. If the value is low, switch to high
+            //if (drResponse.PinValue == ArduinoDriver.DigitalValue.Low)
+            //{
+            //    dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.High));
+            //    drResponse = driver.Send(new DigitalReadRequest(pin));
+            //    //MessageBox.Show(drResponse.PinValue.ToString());
+            //    this.Signal8.Fill = new SolidColorBrush(Colors.WhiteSmoke);
+            //}
+            //else
+            //{
+            //    dwResponse = driver.Send(new DigitalWriteRequest(pin, ArduinoDriver.DigitalValue.Low));
+            //    drResponse = driver.Send(new DigitalReadRequest(pin));
+            //    //MessageBox.Show(drResponse.PinValue.ToString());
+            //    this.Signal8.Fill = new SolidColorBrush(Colors.Red);
+            //}
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)

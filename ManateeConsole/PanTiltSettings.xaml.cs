@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using WindowsControlLibrary1;
 using System.IO.Ports;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace ManateeConsole
 {
@@ -24,8 +25,6 @@ namespace ManateeConsole
     {
         public ATCore maincore;
         public ObservableCollection<string> portList = new ObservableCollection<string>();
-        public bool port1Open = false;
-        public bool port2Open = false;
 
         public PanTiltSettings()
         {
@@ -46,21 +45,30 @@ namespace ManateeConsole
         {
             ExtendedWindowsFormsHost ptHost1 = new ExtendedWindowsFormsHost();
             ExtendedWindowsFormsHost ptHost2 = new ExtendedWindowsFormsHost();
-            //ExtendedWindowsFormsHost ptHost3 = new ExtendedWindowsFormsHost();
+
             ptHost1.Child = maincore.pt1;
             ptHost2.Child = maincore.pt2;
-            //ptHost3.Child = maincore.pt3;
+
             this.ptdock1.Children.Add(ptHost1);
             this.ptdock2.Children.Add(ptHost2);
-            //this.ptdock3.Children.Add(ptHost3);
+
+            //Get a list of serial ports
             getPorts();
+
             //Bind portList to comboBoxes
             this.comboBox1SerialPort1.ItemsSource = portList;
-            maincore.pt1.PerformAutoScale();
             this.comboBox1SerialPort2.ItemsSource = portList;
 
-            this.checkBoxAutoConnect1.IsChecked = port1Open;
-            this.checkBoxAutoConnect2.IsChecked = port2Open; 
+            //Check if ports are open and initialize
+            this.checkBoxAutoConnect1.IsChecked = maincore.port1open;
+            this.checkBoxAutoConnect2.IsChecked = maincore.port2open;
+
+            //Update Pan and Tilt Angles
+            ////textBoxPanPosition1.Text = maincore.pt1.pAngle.ToString();
+            ////textBoxTiltPosition1.Text = maincore.pt1.tAngle.ToString();
+
+            ////textBoxPanPosition2.Text = maincore.pt2.pAngle.ToString();
+            ////textBoxTiltPosition2.Text = maincore.pt2.tAngle.ToString();
         }
 
         private void getPorts()
@@ -71,21 +79,86 @@ namespace ManateeConsole
             {
                 portList.Add(port);
             }
+        }
 
+        private bool checkIfPortIsOpen(smPanTilt pt)
+        {
+            if(pt.cPort!="COM1")
+            {
+                //Does it exist?
+                if(SerialPort.GetPortNames().Any(x=> x == pt.cPort.ToString()))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void btn1Connect_Click(object sender, RoutedEventArgs e)
         {
-            maincore.pt1.cPort = this.comboBox1SerialPort1.Text;
-            port1Open = maincore.pt1.cPortOpen();
-            this.checkBoxAutoConnect1.IsChecked = port1Open;
+                try
+                {
+                    maincore.pt1.cPort = this.comboBox1SerialPort1.Text;
+                    maincore.port1open= maincore.pt1.cPortOpen();
+                    this.checkBoxAutoConnect1.IsChecked = maincore.port1open;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Error opening port!", ex.Message);
+                }
         }
 
         private void btn2Connect_Click(object sender, RoutedEventArgs e)
         {
-            maincore.pt2.cPort = this.comboBox1SerialPort2.Text;
-            port2Open = maincore.pt2.cPortOpen();
-            this.checkBoxAutoConnect2.IsChecked = port1Open;
+                try
+                {
+                    maincore.pt2.cPort = this.comboBox1SerialPort2.Text;
+                    maincore.port2open= maincore.pt2.cPortOpen();
+                    this.checkBoxAutoConnect2.IsChecked = maincore.port2open;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Error opening port: {0}", ex.Message);
+                }
         }
+
+        private void btn2Disconnect_Click(object sender, RoutedEventArgs e)
+        {
+                try
+                {
+                    maincore.pt2.cPortClose();
+                    this.checkBoxAutoConnect2.IsChecked = false;
+                    maincore.port2open= false;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Error closing port: {0}", ex.Message);
+                }
+        }
+
+        private void btn1Disconnect_Click(object sender, RoutedEventArgs e)
+        {
+                try
+                {
+                    maincore.pt1.cPortClose();
+                    this.checkBoxAutoConnect1.IsChecked = false;
+                    maincore.port1open= false;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine("Error closing port: {0}", ex.Message);
+                }
+
+        }
+
+        //private void UpdatePTAngles(object sender, MouseButtonEventArgs e)
+        //{
+        //    textBoxPanPosition1.Text = maincore.pt1.pAngle.ToString();
+        //    Trace.WriteLine("pAngle: " + maincore.pt1.pAngle.ToString());
+        //    textBoxTiltPosition1.Text = maincore.pt1.tAngle.ToString();
+
+        //    textBoxPanPosition2.Text = maincore.pt2.pAngle.ToString();
+        //    textBoxTiltPosition2.Text = maincore.pt2.tAngle.ToString();
+        //}
     }
 }

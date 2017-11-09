@@ -47,27 +47,27 @@ namespace ManateeConsole
             //-----IP Camera EMGUCV ImageBoxes-----\\
             WindowsFormsHost ipHost1 = new WindowsFormsHost();
             WindowsFormsHost ipHost2 = new WindowsFormsHost();
-            //ipHost1.Child = maincore.ip1.imgBx;
+            ipHost1.Child = maincore.ip1.imgBx;
             maincore.ip1.imgBx.SizeMode = PictureBoxSizeMode.StretchImage;
             //ipHost2.Child = maincore.ip1.imgBx;
             //ipImgBox1 = maincore.ip1.imgBx;
-            //maincore.cam1.imgBx.SizeMode = PictureBoxSizeMode.StretchImage;
             //this.ipImgBox2 = maincore.cam2.imgBx;
-            //maincore.cam2.imgBx.SizeMode = PictureBoxSizeMode.StretchImage;
             this.ip1.Children.Add(ipHost1);
-            this.ip2.Children.Add(ipHost2);
+            //this.ip2.Children.Add(ipHost2);
             //Testing
             //maincore.clock.Tick += timer_Tick;
-            maincore.ip1._capture.Start();
-            maincore.ip1._capture.ImageGrabbed += maincore.ip1.ProcessFrame;
-            ipHost1.Child = maincore.ip1.imgBx;
+            //maincore.ip1._capture.Start();
+            //maincore.ip1._capture.ImageGrabbed += maincore.ip1.ProcessFrame;
+            //ipHost1.Child = maincore.ip1.imgBx;
+            //ipHost2.Child = maincore.ip2.imgBx;
         }
 
         private void WindowUnloaded(object sender, RoutedEventArgs e)
         {
             ipHost1.Child = null;
             ipHost2.Child = null;
-            maincore.ip1._capture.Stop();
+            //maincore.ip1._capture.Stop();
+            //maincore.ip2._capture.Stop();
         }
 
         //void timer_Tick(object sender, EventArgs e)

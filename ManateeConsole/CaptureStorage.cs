@@ -15,7 +15,6 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Emgu.CV;
-using ManateeConsole.Properties;
 
 namespace ManateeConsole
 {
@@ -27,50 +26,16 @@ namespace ManateeConsole
         private readonly DbConnection _db;
         private readonly object _dbLock = new object();
 
-        private Dictionary<CaptureSource, DateTime> _lastTimestamps = new Dictionary<CaptureSource, DateTime>(6);
-
         public string ImageFolder
         {
             get { return _imageFolderInfo.FullName; }
             set { _imageFolderInfo = string.IsNullOrEmpty(value) ? null : new DirectoryInfo(value); }
         }
 
-        public bool IsEnabled
-        {
-            get { return Settings.Default.CaptureStorageEnabled; }
-            set
-            {
-                Settings.Default.CaptureStorageEnabled = value;
-                Settings.Default.Save();
-            }
-        }
-
-        public int FpsLimit
-        {
-            get
-            {
-                return Settings.Default.CaptureStorageFps;
-            }
-            set
-            {
-                Settings.Default.CaptureStorageFps = value;
-                CalculateMinCaptureInterval();
-                Settings.Default.Save();
-            }
-        }
-
-        private int minCaptureInterval;
-
-        private void CalculateMinCaptureInterval()
-        {
-            minCaptureInterval = 1000 / FpsLimit;
-        }
-
         private DirectoryInfo _imageFolderInfo;
 
         private CaptureStorage()
         {
-            CalculateMinCaptureInterval();
             ImageFolder = ConfigurationManager.AppSettings["CaptureStorageFolder"];
             try
             {
@@ -94,16 +59,9 @@ namespace ManateeConsole
 
         public void AddCapture(IImage image, CaptureSource source, GateState state = GateState.Open, DateTime? timestamp = null)
         {
-            if (!IsEnabled) return;
-            var dateTime = timestamp ?? DateTime.UtcNow;
-            DateTime lastTimestamp;
-            if (_lastTimestamps.TryGetValue(source, out lastTimestamp) && (dateTime - lastTimestamp).TotalMilliseconds < minCaptureInterval)
-            {
-                return;
-            }
             var capture = new CaptureEntry()
             {
-                Timestamp = dateTime,
+                Timestamp = timestamp ?? DateTime.UtcNow,
                 GateState = state,
                 Source = source,
                 FilePath = SaveImage(image, source.ToString()),
@@ -120,7 +78,6 @@ namespace ManateeConsole
                 {
                     command.ExecuteNonQuery();
                 }
-                _lastTimestamps[source] = dateTime;
             }
             catch (Exception e)
             {

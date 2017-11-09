@@ -17,7 +17,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Windows.Forms.Integration; 
 using WindowsControlLibrary1;
-using System.ComponentModel; 
+using System.ComponentModel;
 
 //Include BlueView SDK Libraries
 using BVTSDK;
@@ -29,21 +29,22 @@ using Emgu.Util;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Structure;
 
+
 namespace ManateeConsole
 {
     public class ATCore
     {
         //-----ATCORE FIELDS-----\\
-
         public ATSonar son1, son2;
         public ATCamera cam1, cam2;
-        public ATCamera ip1;
-        public smPanTilt pt1, pt2, pt3;
-#if !DEV
+        public ATCamera ip1, ip2;
+        public smPanTilt pt1, pt2;
+        public bool port1open, port2open;
         public ATHydrophone hydro1;
-#endif
         public DispatcherTimer clock, sclock;
         public ViewModel viewmodel;
+        public bool saveAtThisTick = false;
+        public int counter = 0;
 
         //----ATCORE CONSTRUCTOR----\\
         public ATCore()
@@ -55,12 +56,41 @@ namespace ManateeConsole
             sclock = new DispatcherTimer();
             sclock.Interval = new TimeSpan(0, 0, 0, 0, 50);
 
-            son1 = new ATSonar(viewmodel.ipaddr_s1, 0, 1, 50);
+            try
+            {
+                son1 = new ATSonar(viewmodel.ipaddr_s1, 0, 0, 8);
+            }
+            catch(Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show("Sonar 1 could not connect.\n" + e.ToString());
+            }
+            finally
+            {
+                if (!son1.isConnected)
+                {
+                    son1 = new ATSonar(@"C:/Swimmer.son", 0, 0, 8);
+                }
+            }
             if (son1.isConnected)
             {
                 viewmodel.isConnected_s1 = true;
             }
-            son2 = new ATSonar(viewmodel.ipaddr_s2, 0, 1, 50);
+
+            try
+            {
+                son2 = new ATSonar(viewmodel.ipaddr_s2, 0, 0, 8);
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show("Sonar 2 could not connect.");
+            }
+            finally
+            {
+                if (!son2.isConnected)
+                {
+                    son2 = new ATSonar(@"C:/Swimmer.son", 0, 1, 50);
+                }
+            }
             if (son2.isConnected)
             {
                 viewmodel.isConnected_s2 = true;
@@ -68,23 +98,14 @@ namespace ManateeConsole
 
             //son2.connectHead(1);    //-USE THIS TO CONNECT TO THE 2250 HEAD
             //son2.setRange(1, 15);
-#if DEV
-            cam1 = new ATCamera(1, 0);
+
+            cam1 = new ATCamera(2, 0);
             viewmodel.isConnected_c1 = true;
             viewmodel.ipaddr_c1 = "CAMERA 1";
 
-            cam2 = new ATCamera(1, 0);
+            cam2 = new ATCamera(2, 0);
             viewmodel.isConnected_c2 = true;
             viewmodel.ipaddr_c2 = "CAMERA 2";
-#else
-            cam1 = new ATCamera(2, 0);
-            viewmodel.isConnected_c1 = true;   
-            viewmodel.ipaddr_c1 = "CAMERA 1";    
-
-            cam2 = new ATCamera(2, 0);
-            viewmodel.isConnected_c2 = true;   
-            viewmodel.ipaddr_c2 = "CAMERA 2";    
-#endif
 
             pt1 = new smPanTilt();
             pt1.AutoScaleMode = AutoScaleMode.Inherit;
@@ -101,28 +122,21 @@ namespace ManateeConsole
             pt2.cDataBits = 8;
             pt2.cStopBits = 1;
 
-#if !DEV
-            hydro1 = new ATHydrophone();
-#endif
+            //hydro1 = new ATHydrophone();
 
-            //ip1 = new ATCamera(3);
-            
+            //ip1 = new ATCamera(2,0);
+            //ip2 = new ATCamera();
         }
 
         //-----ATCORE MEMBERS-----\\
         // This all needs to happen in this function
-        //      loadSettingsFromConfigFile()
+
         //      runDiagnostics()
-        //      runNetworkSettings()
         //
         //      findAllSonars()
+        //      checkIPAddresses()
         //      connectSonars()
-        //      pairSonars()
         //
-        //      findCameras()
-        //      connectCameras()
-        //      findPantilts()
-        //      connectPantilts()
 
     }
 }

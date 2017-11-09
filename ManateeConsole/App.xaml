@@ -8,16 +8,16 @@
             <ResourceDictionary.MergedDictionaries>
                 <!--MahApps Resource Dictionaries. All Filenames are case-->
                 <ResourceDictionary
-        Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary
-        Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary
-        Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <!--Accents and AppTheme Settings-->
                 <ResourceDictionary
-        Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Steel.xaml" />
+                Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Steel.xaml" />
                 <ResourceDictionary
-        Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
+                Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseDark.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary> 
     </Application.Resources>

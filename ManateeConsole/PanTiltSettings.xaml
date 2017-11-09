@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ManateeConsole"
         mc:Ignorable="d"
-        Title="PanTiltSettings" Height="1000" Width="1000" VerticalAlignment="Top" HorizontalAlignment="Center" Loaded="WindowLoaded">
+        Title="PanTiltSettings" Height="1000" Width="750" VerticalAlignment="Top" HorizontalAlignment="Center" Loaded="WindowLoaded">
     <Grid>
         <Grid Margin="10">
             <Grid.RowDefinitions>
@@ -14,8 +14,8 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <DockPanel Name="ptdock1" Grid.Row="0" Grid.Column="1" LastChildFill="False">
                 <WindowsFormsHost x:Name="ptHost1" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="5"/>
@@ -23,9 +23,6 @@
             <DockPanel Name="ptdock2" Grid.Row="1" Grid.Column="1" LastChildFill="False">
                 <WindowsFormsHost x:Name="ptHost2" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="5"/>
             </DockPanel>
-            <!--<DockPanel Name="ptdock3" Grid.Row="2" Grid.Column="1">
-                <WindowsFormsHost x:Name="ptHost3" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="5"/>
-            </DockPanel>-->
             <Border Grid.Row="0" Grid.Column="0" BorderBrush="Black" BorderThickness="1" Margin="5" Grid.RowSpan="1">
                 <Grid Margin="9">
                     <Grid.RowDefinitions>
@@ -36,7 +33,7 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="2*"/>
+                            <!--<ColumnDefinition Width="1*"/>-->
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" Margin="10">
                             <Grid.RowDefinitions>
@@ -47,10 +44,11 @@
                             <Label x:Name="labelSerialPort1" Content="Serial Port" Grid.Row="0" VerticalAlignment="Top"/>
                             <ComboBox x:Name="comboBox1SerialPort1" Height="28" Grid.Row="0" SelectedIndex="0" VerticalAlignment="Center" Text="{Binding serialPort_pt1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
-                            <Button x:Name="btn1Connect" Height="28" Width="250" Content="Connect" Grid.Row="1" Click="btn1Connect_Click"/>
+                            <Button x:Name="btn1Connect" Height="28" Content="Connect" Grid.Row="1" Click="btn1Connect_Click" VerticalAlignment="Top"/>
                             <CheckBox x:Name="checkBoxAutoConnect1" Content="Connected to Pan/Tilt" Grid.Row="2" Height="15" Margin="5,5" VerticalAlignment="Center" IsChecked="True"/>
+                            <Button x:Name="btn1Disconnect" Height="28" Content="Disconnect" Grid.Row="1" Click="btn1Disconnect_Click" VerticalAlignment="Center"/>
                         </Grid>
-                        <Grid Grid.Column="1" Margin="10">
+                        <!--<Grid Grid.Column="1" Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="1*"/>
@@ -63,13 +61,13 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="textblockHomePosition1" Text="Home Position" Grid.ColumnSpan="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="textblockHomePosition1" Text="Current Position" Grid.ColumnSpan="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock x:Name="textblockPanPosition1" Text="Pan Position" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
                             <TextBox x:Name="textBoxPanPosition1" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding panHome_pt1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,15"/>
-                            <TextBlock x:Name="textblocklTiltPosition1" Text="Tilt Position" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="textblockTiltPosition1" Text="Tilt Position" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
                             <TextBox x:Name="textBoxTiltPosition1" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding tiltHome_pt1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,15"/>
-                            <CheckBox x:Name="checkBoxOffset1" Content="Offset" Grid.Row="3" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
+                            <CheckBox x:Name="checkBoxOffset1" Content="Offset" Grid.Row="3" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"/>
+                        </Grid>-->
                     </Grid>
                 </Grid>
             </Border>           
@@ -83,7 +81,7 @@
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>
-                            <ColumnDefinition Width="1*"/>
+                            <!--<ColumnDefinition Width="1*"/>-->
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" Margin="10">
                             <Grid.RowDefinitions>
@@ -94,10 +92,11 @@
                             <Label x:Name="labelSerialPort2" Content="Serial Port" Grid.Row="0" VerticalAlignment="Top"/>
                             <ComboBox x:Name="comboBox1SerialPort2" Height="28" Grid.Row="0" SelectedIndex="0" VerticalAlignment="Center" Text="{Binding serialPort_pt2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
-                            <Button x:Name="btn2Connect" Height="28" Width="250" Content="Connect" Grid.Row="1" Click="btn2Connect_Click"/>
+                            <Button x:Name="btn2Connect" Height="28" Content="Connect" Grid.Row="1" Click="btn2Connect_Click" VerticalAlignment="Top"/>
                             <CheckBox x:Name="checkBoxAutoConnect2" Content="Connected to Pan/Tilt" Grid.Row="2" Height="15" Margin="5,5" VerticalAlignment="Center" IsChecked="False"/>
+                            <Button x:Name="btn2Disconnect" Height="28" Content="Disconnect" Grid.Row="1" Click="btn2Disconnect_Click" VerticalAlignment="Center"/>
                         </Grid>
-                        <Grid Grid.Column="1" Margin="10">
+                        <!--<Grid Grid.Column="1" Margin="10">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="1*"/>
                                 <RowDefinition Height="1*"/>
@@ -110,13 +109,13 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="textblockHomePosition2" Text="Home Position" Grid.ColumnSpan="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="textblockHomePosition2" Text="Current Position" Grid.ColumnSpan="4" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock x:Name="textblockPanPosition2" Text="Pan Position" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
                             <TextBox x:Name="textBoxPanPosition2" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding panHome_pt2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,15"/>
                             <TextBlock x:Name="textblocklTiltPosition2" Text="Tilt Position" Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Center"/>
                             <TextBox x:Name="textBoxTiltPosition2" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding tiltHome_pt2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="5,15"/>
-                            <CheckBox x:Name="checkBoxOffset2" Content="Offset" Grid.Row="3" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
+                            <CheckBox x:Name="checkBoxOffset2" Content="Offset" Grid.Row="3" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden"/>
+                        </Grid>-->
                     </Grid>
                 </Grid>
             </Border>

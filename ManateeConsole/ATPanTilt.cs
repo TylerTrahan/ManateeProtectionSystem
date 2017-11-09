@@ -41,11 +41,5 @@ namespace ManateeConsole
         ///  -Add the interop host control to the Grid control's collection of child controls.
         /// </summary>
         /// 
-
-
-
-
-
-        
     }
 }

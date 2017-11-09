@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using GalaSoft.MvvmLight;
 
 namespace ManateeConsole
 {
@@ -26,9 +23,23 @@ namespace ManateeConsole
         public CaptureHistoryView()
         {
             InitializeComponent();
+            Loaded += CaptureHistoryView_Loaded;
+        }
 
-            DataContext = new CaptureHistoryViewModel();
+        void CaptureHistoryView_Loaded(object sender, RoutedEventArgs e)
+        {
+            var now = DateTime.Now;
+            DatePicker.SelectedDate = now.Date;
+            HourTextBox.NumValue = now.Hour;
+            MinTextBox.NumValue = now.Minute;
+            SecTextBox.NumValue = now.Second;
+        }
+
+        private void FindButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!DatePicker.SelectedDate.HasValue) return;
+            var dateTime = DatePicker.SelectedDate.Value.Add(new TimeSpan(HourTextBox.NumValue, MinTextBox.NumValue, SecTextBox.NumValue));
+            CapturesControl.ItemsSource = CaptureStorage.Instance.GetCaptures(dateTime, 1000).OrderBy(x => x.Source);
         }
     }
-
 }

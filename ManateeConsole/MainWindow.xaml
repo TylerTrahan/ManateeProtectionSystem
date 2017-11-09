@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:ManateeConsole"
         xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" 
         xmlns:emgu="clr-namespace:Emgu.CV.UI;assembly=Emgu.CV.UI"
-        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro" 
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         x:Name="MainWindow1" 
         x:Class="ManateeConsole.MainWindow"
         Title="Manatee Protection System" Height="990.238" Width="1222.746" WindowStartupLocation="CenterScreen" WindowState="Maximized" Loaded="Window_Loaded" Unloaded="Window_Closed">
-    <Window.Resources>
+    <!--<Window.Resources>
             <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/FlatSlider.xaml" />
-    </Window.Resources>
+    </Window.Resources>-->
     <Grid x:Name="MainGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="500*"/>
@@ -20,6 +20,7 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="0.5*"/>
             <RowDefinition Height="2.5*"/>
             <RowDefinition Height="1*"/>
@@ -34,11 +35,9 @@
             </Grid.ColumnDefinitions>
             <Border BorderBrush="Black" BorderThickness="4" Grid.Column="0" Margin="0" Grid.ColumnSpan="1">
                 <DockPanel x:Name="sonar1" Grid.Column="0" Margin="4" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="OnMouseDownSonar1">
-
-                    
                     <WindowsFormsHost x:Name="sonarHost1" Grid.Column="0" Margin="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="OnMouseDownSonar1"/>
                     <Slider x:Name="StopRange1" Orientation="Vertical" HorizontalAlignment="Right" Margin="5,50,5,5" Width="15" DockPanel.Dock="Right" Value="{Binding stopRange_s1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Maximum="100" RenderTransformOrigin="0.5,0.5" Style="{DynamicResource FlatSlider}"/>
-                    <Slider x:Name="StartRange1" Orientation="Vertical" HorizontalAlignment="Right" Margin="5,50,5,5" Width="15" DockPanel.Dock="Right" Value="{Binding startRange_s1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="1" Maximum="100" Style="{DynamicResource FlatSlider}"/>
+                    <Slider x:Name="StartRange1" Orientation="Vertical" HorizontalAlignment="Right" Margin="5,50,5,5" Width="15" DockPanel.Dock="Right" Value="{Binding startRange_s1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Minimum="0" Maximum="100" Style="{DynamicResource FlatSlider}"/>
                 </DockPanel>
             </Border>
             <Border BorderBrush="Black" BorderThickness="4" Grid.Column="1" Margin="0" Grid.ColumnSpan="1">
@@ -48,16 +47,33 @@
                     <Slider x:Name="StartRange2" Orientation="Vertical" Margin="5,50,5,5" Width="15" DockPanel.Dock="Right" Value="{Binding startRange_s2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Maximum="100" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Style="{DynamicResource FlatSlider}"/>
                 </DockPanel>
             </Border>
-
-            <!--<Border BorderBrush="Black" BorderThickness="4" Grid.Column="2" Margin="0" Grid.ColumnSpan="1">
-                <DockPanel x:Name="sonar3" Grid.Column="2" Margin="4" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="OnMouseDownSonar3">
-                    <WindowsFormsHost x:Name="sonarHost3" Grid.Column="3" Margin="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="OnMouseDownSonar3"/>
-                    <Slider x:Name="StopRange3" Orientation="Vertical" HorizontalAlignment="Right" Margin="0,50,0,5" Width="45" DockPanel.Dock="Right" Value="{Binding stopRange_s3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Maximum="100" RenderTransformOrigin="0.5,0.5"/>
-                    <Slider x:Name="StartRange3" Orientation="Vertical" Margin="0,50,0,5" Width="50" DockPanel.Dock="Right" Value="{Binding startRange_s3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Maximum="100" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" IsDirectionReversed="True"/>
-                </DockPanel>
-            </Border>-->
         </Grid>
-        <Grid x:Name="SonarControls" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="SonarControls1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Controls:ToggleSwitch x:Name="son1_pyt_switch" Header="Motion Detection" Grid.Column="0" Grid.Row="0" IsChecked="True" VerticalAlignment="Top" Margin="1" HorizontalAlignment="Left"/>
+                <Controls:ToggleSwitch x:Name="son1_vin_switch" Header="Vinet Detector" Grid.Column="1" Grid.Row="0" IsChecked="True" VerticalAlignment="Top" Margin="1" HorizontalAlignment="Left"/>
+                <Controls:ToggleSwitch x:Name="son1_trk_switch" Header="Tracking" Grid.Column="3" Grid.Row="0" IsChecked="True" VerticalAlignment="Top" Margin="1" HorizontalAlignment="Left"/>
+            </Grid>
+            <Grid x:Name="SonarControls2" Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Grid>
+        <Grid x:Name="SonarControls" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -66,10 +82,10 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
-               <Button x:Name="btn_son1_head0" Content="900 KHz Head" Margin="0,10,0,10" Grid.Column="0" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" BorderBrush="Black" Background="#FFB0C4DE"/>
-               <Button x:Name="btn_son1_head1" Content="2250 KHz Head" Margin="0,10,0,10" Grid.Column="1" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" Click="btn_son1_head1_Click" BorderBrush="Black"/>
-            <Button x:Name="btn_son2_head0" Content="900 KHz Head" Margin="0,10,0,10" Grid.Column="3" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" BorderBrush="Black" Background="#FFB0C4DE"/>
-               <Button x:Name="btn_son2_head1" Content="2250 KHz Head" Margin="0,10,0,10" Grid.Column="4" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" Click="btn_son2_head1_Click" BorderBrush="Black"/>
+            <Button x:Name="btn_son1_head0" Content="900 KHz Head" Margin="0,10,0,10" Grid.Column="0" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" BorderBrush="Black" Background="Black" Click="btn_son1_head0_Click"/>
+            <Button x:Name="btn_son1_head1" Content="2250 KHz Head" Margin="0,10,0,10" Grid.Column="1" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" Click="btn_son1_head1_Click" BorderBrush="Black" Background="Silver"/>
+            <Button x:Name="btn_son2_head0" Content="900 KHz Head" Margin="0,10,0,10" Grid.Column="3" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" BorderBrush="Black" Background="Black" Click="btn_son2_head0_Click"/>
+            <Button x:Name="btn_son2_head1" Content="2250 KHz Head" Margin="0,10,0,10" Grid.Column="4" HorizontalAlignment="Center" Width="150" FontFamily="Arial Rounded MT Bold" Click="btn_son2_head1_Click" BorderBrush="Black" Background="Silver"/>
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
@@ -81,7 +97,6 @@
                 <Label Content="Stop Range:" Grid.Row="1" HorizontalAlignment="Left" Margin="0" FontFamily="Arial Rounded MT Bold"/>
                 <TextBlock Grid.Row="1" Text="{Binding stopRange_s1}"  VerticalAlignment="Center" HorizontalAlignment="Right"/>
                 <Button x:Name="btn_SetRangeSon1" Grid.Row="2" Content="Set Range" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Click="btn_SetRangeSon1_Click"/>
-                
             </Grid>
             <Grid Grid.Column="5">
                 <Grid.RowDefinitions>
@@ -95,8 +110,8 @@
                 <TextBlock Grid.Row="1" Text="{Binding stopRange_s2}"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <Button x:Name="btn_SetRangeSon2" Grid.Row="2" Content="Set Range" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Click="btn_SetRangeSon2_Click"/>
             </Grid>
-          </Grid>
-        <Grid x:Name="MiddleGrid" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,10" Grid.ColumnSpan="2">
+        </Grid>
+        <Grid x:Name="MiddleGrid" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,10" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -111,11 +126,8 @@
                     <WindowsFormsHost x:Name="videoHost2" Grid.Column="0" Margin="0,0,0,0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="OnMouseDownVideo2"/>
                 </DockPanel>
             </Border>
-            <!--<DockPanel x:Name="video3" Grid.Column="2" Margin="4" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="OnMouseDownVideo3">
-                <WindowsFormsHost x:Name="videoHost3" Grid.Column="0" Margin="0,0,0,0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MouseDown="OnMouseDownVideo3"/>
-            </DockPanel>-->
         </Grid>
-        <Grid x:Name="BottomGrid" Grid.Row="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,0" Grid.ColumnSpan="2">
+        <Grid x:Name="BottomGrid" Grid.Row="4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1.5*"/>
                 <ColumnDefinition Width="1.5*"/>

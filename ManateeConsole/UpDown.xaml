@@ -18,12 +18,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.Resources>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="White"/>
                 <Setter Property="Padding" Value="3 0"/>
                 <Setter Property="Margin" Value="0"/>
                 <Setter Property="FontSize" Value="8"/>
-                <Setter Property="MinHeight" Value="0" />
-                <Setter Property="OverridesDefaultStyle" Value="True"></Setter>
                 <!--
                 <Setter Property="Template">
                     <Setter.Value>

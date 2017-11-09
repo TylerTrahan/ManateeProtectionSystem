@@ -5,7 +5,7 @@
         xmlns:ext="http://schemas.abtsoftware.co.uk/scichart/exampleExternals"
         Title="FFT with spectrum" Height="800" Width="1024" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid Background="#FF1C1C1E">
-        <Grid.ColumnDefinitions>
+        <!--<Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
@@ -16,10 +16,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--  The SciChartInteractionToolbar adds zoom, pan, zoom extents and rotate functionality  -->
+        --><!--  The SciChartInteractionToolbar adds zoom, pan, zoom extents and rotate functionality  -->
         <!--  to the chart and is included for example purposes.  -->
         <!--  If you wish to know how to zoom and pan a chart then do a search for Zoom Pan in the Examples suite!  -->
-        <!--<ext:SciChartInteractionToolbar Grid.RowSpan="2" TargetSurface="{Binding ElementName=sciChart}"/>-->
+        <!--<ext:SciChartInteractionToolbar Grid.RowSpan="2" TargetSurface="{Binding ElementName=sciChart}"/>--><!--
 
         <s:SciChartSurface x:Name="sciChart" Grid.Column="1" Margin="5">
 
@@ -84,6 +84,6 @@
                 <s:NumericAxis Visibility="Hidden"/>
             </s:SciChartSurface.YAxis>
 
-        </s:SciChartSurface>
+        </s:SciChartSurface>-->
     </Grid>
 </Window>

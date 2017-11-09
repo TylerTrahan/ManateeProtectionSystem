@@ -20,24 +20,6 @@ namespace ManateeConsole
     /// </summary>
     public partial class UpDown : UserControl
     {
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            "Value", typeof (int), typeof (UpDown), new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, PropertyChangedCallback));
-
-        private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
-        {
-            var ud = dependencyObject as UpDown;
-            if (ud != null)
-            {
-                ud.OnValuePropertyChanged();
-            }
-        }
-
-        public int Value
-        {
-            get { return (int) GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
-        }
-
         public UpDown()
         {
             InitializeComponent();
@@ -45,21 +27,23 @@ namespace ManateeConsole
             txtNum.Text = Text;
         }
 
-        private void OnValuePropertyChanged()
+        private int _numValue = 0;
+
+        public int NumValue
         {
-            if (Min < Max)
+            get {  return _numValue; }
+            set
             {
-                var value = Math.Min(Math.Max(Value, Min), Max - 1);
-                if (value != Value)
-                {
-                    Value = value;
-                    return;
+                if (Min < Max) 
+                { 
+                    value = Math.Min(Math.Max(value, Min), Max - 1); 
                 }
+                _numValue = value;
+                txtNum.Text = Text;
             }
-            txtNum.Text = Text;
         }
 
-        private string Text { get { return Value.ToString(Format); } }
+        private string Text { get { return NumValue.ToString(Format); } }
 
         public int Min { get; set; }
         public int Max { get; set; }
@@ -67,12 +51,12 @@ namespace ManateeConsole
 
         private void cmdUp_Click(object sender, RoutedEventArgs e)
         {
-            Value++;
+            NumValue++;
         }
         
         private void cmdDown_Click(object sender, RoutedEventArgs e)
         {
-            Value--;
+            NumValue--;
         }
         
         private void txtNum_TextChanged(object sender, TextChangedEventArgs e)
@@ -85,7 +69,7 @@ namespace ManateeConsole
             int value;
             if (int.TryParse(txtNum.Text, out value))
             {
-                Value = value;
+                NumValue = value;
             }
             else
             {
